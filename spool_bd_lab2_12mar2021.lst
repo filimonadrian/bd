@@ -1,0 +1,610 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+12-03-2021 12:12:12                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values('Filimon Adrian', '334CC', 'Lab2', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Filimon Adrian                 334CC      Lab2       SCOTT      12-MAR-21                                                                                                                               
+
+SQL> CREATE TABLE departamente2 (    id_departament NUMBER(2) NOT NULL,    denumire_departament VARCHAR2(30),    telefon VARCHAR2(10));
+
+Table created.
+
+SQL> CREATE TABLE grila_salariu2
+  2  (
+  3      grad NUMBER(2),
+  4      nivel_inferior NUMBER,
+  5      nivel_superior NUMBER
+  6  );
+
+Table created.
+
+SQL> CREATE TABLE angajati2
+  2  (
+  3      id_angajat NUMBER(4) NOT NULL,
+  4      nume VARCHAR2(30),
+  5      prenume VARCHAR2(30),
+  6      functie VARCHAR2(20),
+  7      id_sef NUMBER(4),
+  8      data_angajarii DATE DEFAULT SYSDATE,
+  9      salariu NUMBER(7, 2) DEFAULT 2000,
+ 10      comision NUMBER(7, 2),
+ 11      id_departament NUMBER
+ 12  );
+
+Table created.
+
+SQL> ALTER TABLE departamente2 ADD CONSTRAINT pk_departamente2 PRIMARY KEY (id_departament);
+
+Table altered.
+
+SQL> ALTER TABLE grila_salariu2 ADD CONSTRAINT pk_grila2 PRIMARY KEY (grad);
+
+Table altered.
+
+SQL> ALTER TABLE angajati2 ADD CONSTRAINT pk_angajati2 PRIMARY KEY (id_angajat);
+
+Table altered.
+
+SQL> ALTER TABLE angajati2 ADD CONSTRAINT fk_ang__dep2 FOREIGN KEY (id_departament)
+  2  ;
+
+*
+ERROR at line 2:
+ORA-00905: missing keyword 
+
+
+SQL> ALTER TABLE angajati2 ADD CONSTRAINT fk_ang__dep2 FOREIGN KEY (id_departament)
+  2    REFERENCES departamente2(id_departament);
+
+Table altered.
+
+SQL> ALTER TABLE angajati2 ADD CONSTRAINT fk_ang__ang2 FOREIGN KEY (id_sef)
+  2    REFERENCES angajati2(id_angajat);
+
+Table altered.
+
+SQL> ALTER TABLE departamente2 ADD CONSTRAINT uq_denumire2 UNIQUE (denumire_departament);
+
+Table altered.
+
+SQL> ALTER TABLE angajati2 ADD CONSTRAINT uq_nume2 UNIQUE (nume, prenume);
+
+Table altered.
+
+SQL> INSERT INTO grila_salariu2 VALUES(1, 1, 1000);
+
+1 row created.
+
+SQL> INSERT INTO grila_salariu2 VALUES(1, 1001, 2000);
+INSERT INTO grila_salariu2 VALUES(1, 1001, 2000)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_GRILA2) violated 
+
+
+SQL> INSERT INTO departamente2 VALUES(10, 'Proiecte Software', '3212121');
+
+1 row created.
+
+SQL> INSERT INTO departamente2 VALUES(20, 'Asigurarea Calitatii', '3212122');
+
+1 row created.
+
+SQL> INSERT INTO departamente2 VALUES(10, 'Resurse Umane', '3212123');
+INSERT INTO departamente2 VALUES(10, 'Resurse Umane', '3212123')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_DEPARTAMENTE2) violated 
+
+
+SQL> INSERT INTO departamente2 VALUES(30, 'Proiectare Software', '3212124');
+
+1 row created.
+
+SQL> INSERT INTO angajati2(id_angajat, nume, prenume, functie)
+  2    VALUES(1001, 'Ionescu', 'Ion', 'Director');
+
+1 row created.
+
+SQL> INSERT INTO angajati2(nume, prenume, functie)
+  2    VALUES('Ionescu', 'Ionel', 'Programator');
+INSERT INTO angajati2(nume, prenume, functie)
+*
+ERROR at line 1:
+ORA-01400: cannot insert NULL into ("SCOTT"."ANGAJATI2"."ID_ANGAJAT") 
+
+
+SQL> INSERT INTO angajati2(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament)
+  2    VALUES(1002, 'Ionescu', 'Ionel', 'Programator', 1001, 1024, 10);
+
+1 row created.
+
+SQL> INSERT INTO grila_salariu2 VALUES(1, 1, 1000);
+INSERT INTO grila_salariu2 VALUES(1, 1, 1000)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_GRILA2) violated 
+
+
+SQL> SELECT * FROM angajati2
+  2  ;
+
+ID_ANGAJAT NUME                           PRENUME                        FUNCTIE                  ID_SEF DATA_ANGA    SALARIU   COMISION ID_DEPARTAMENT                                                 
+---------- ------------------------------ ------------------------------ -------------------- ---------- --------- ---------- ---------- --------------                                                 
+      1001 Ionescu                        Ion                            Director                        12-MAR-21       2000                                                                           
+      1002 Ionescu                        Ionel                          Programator                1001 12-MAR-21       1024                        10                                                 
+
+SQL> column nume format a20
+SQL> column prenume format a20
+SQL> column functie format a20
+SQL> column salariu format 9999.99
+SQL> SELECT nume, prenume, functie, salariu
+  2  FROM angajati2;
+
+NUME                 PRENUME              FUNCTIE               SALARIU                                                                                                                                 
+-------------------- -------------------- -------------------- --------                                                                                                                                 
+Ionescu              Ion                  Director              2000.00                                                                                                                                 
+Ionescu              Ionel                Programator           1024.00                                                                                                                                 
+
+SQL> SELECT nume, prenume, functie, salariu
+  2  FROM angajati2
+  3  WHERE id_departament = 10;
+
+NUME                 PRENUME              FUNCTIE               SALARIU                                                                                                                                 
+-------------------- -------------------- -------------------- --------                                                                                                                                 
+Ionescu              Ionel                Programator           1024.00                                                                                                                                 
+
+SQL> SELECT nume, prenume, functie, salariu
+  2  FROM angajati2
+  3  WHERE functie='Director'
+  4  ;
+
+NUME                 PRENUME              FUNCTIE               SALARIU                                                                                                                                 
+-------------------- -------------------- -------------------- --------                                                                                                                                 
+Ionescu              Ion                  Director              2000.00                                                                                                                                 
+
+SQL> SELECT nume FROM angajati2 WHERE id_angajat = 1002;
+
+NUME                                                                                                                                                                                                    
+--------------------                                                                                                                                                                                    
+Ionescu                                                                                                                                                                                                 
+
+SQL> UPDATE angajati2 SET nume = 'Popescu' WHERE id_angajat = 1002;
+
+1 row updated.
+
+SQL> SELECT nume FROM angajati2 WHERE id_angajat = 1002;
+
+NUME                                                                                                                                                                                                    
+--------------------                                                                                                                                                                                    
+Popescu                                                                                                                                                                                                 
+
+SQL> SELECT nume, salariu, comision, FROM angajati2;
+SELECT nume, salariu, comision, FROM angajati2
+                                *
+ERROR at line 1:
+ORA-00936: missing expression 
+
+
+SQL> SELECT nume, salariu, comision FROM angajati2;
+
+NUME                  SALARIU   COMISION                                                                                                                                                                
+-------------------- -------- ----------                                                                                                                                                                
+Ionescu               2000.00                                                                                                                                                                           
+Popescu               1024.00                                                                                                                                                                           
+
+SQL> UPDATE angajati2 SET comision = 0.1 * salariu;
+
+2 rows updated.
+
+SQL> SELECT nume, salariu, comision FROM angajati2;
+
+NUME                  SALARIU   COMISION                                                                                                                                                                
+-------------------- -------- ----------                                                                                                                                                                
+Ionescu               2000.00        200                                                                                                                                                                
+Popescu               1024.00      102.4                                                                                                                                                                
+
+SQL> INSERT INTO angajati2(id_angajat, nume, prenume, functie, id_sef, id_departament, data_angajarii)
+  2      VALUES(4003, 'Pop', 'Alina', 'Analist', 1001, 20, '21-NOV-1995');
+
+1 row created.
+
+SQL> INSERT INTO angajati2(id_angajat, nume, prenume, functie, id_sef, id_departament, data_angajarii)
+  2  VALUES(4004, 'Pop', 'Calin', 'Tester', 1001, 20, '01-JAN-1980');
+
+1 row created.
+
+SQL> INSERT INTO angajati2(id_angajat, nume, prenume, functie, id_sef, id_departament, data_angajarii)
+  2  VALUES(4005, 'Pop', 'Andrei', 'Manager', 1001, 20, '14-FEB-1995');
+
+1 row created.
+
+SQL> SELECT nume, prenume, data_angajarii, comision
+  2  FROM angajati2;
+
+NUME                 PRENUME              DATA_ANGA   COMISION                                                                                                                                          
+-------------------- -------------------- --------- ----------                                                                                                                                          
+Ionescu              Ion                  12-MAR-21        200                                                                                                                                          
+Popescu              Ionel                12-MAR-21      102.4                                                                                                                                          
+Pop                  Alina                21-NOV-95                                                                                                                                                     
+Pop                  Calin                01-JAN-80                                                                                                                                                     
+Pop                  Andrei               14-FEB-95                                                                                                                                                     
+
+SQL> DELETE FROM angajati2
+  2  WHERE nume = 'Pop' AND prenume = 'Alina';
+
+1 row deleted.
+
+SQL> SELECT nume, prenume, data_angajarii, comision
+  2  FROM angajati2;
+
+NUME                 PRENUME              DATA_ANGA   COMISION                                                                                                                                          
+-------------------- -------------------- --------- ----------                                                                                                                                          
+Ionescu              Ion                  12-MAR-21        200                                                                                                                                          
+Popescu              Ionel                12-MAR-21      102.4                                                                                                                                          
+Pop                  Calin                01-JAN-80                                                                                                                                                     
+Pop                  Andrei               14-FEB-95                                                                                                                                                     
+
+SQL> DELETE FROM angajati2
+  2  WHERE data_angajarii < '01-JAN-1985';
+
+1 row deleted.
+
+SQL> SELECT nume, prenume, data_angajarii, comision
+  2  FROM angajati2;
+
+NUME                 PRENUME              DATA_ANGA   COMISION                                                                                                                                          
+-------------------- -------------------- --------- ----------                                                                                                                                          
+Ionescu              Ion                  12-MAR-21        200                                                                                                                                          
+Popescu              Ionel                12-MAR-21      102.4                                                                                                                                          
+Pop                  Andrei               14-FEB-95                                                                                                                                                     
+
+SQL> DELETE FROM angajati2
+  2  WHERE comision IS NULL;
+
+1 row deleted.
+
+SQL> SELECT nume, prenume, data_angajarii, comision
+  2  FROM angajati2;
+
+NUME                 PRENUME              DATA_ANGA   COMISION                                                                                                                                          
+-------------------- -------------------- --------- ----------                                                                                                                                          
+Ionescu              Ion                  12-MAR-21        200                                                                                                                                          
+Popescu              Ionel                12-MAR-21      102.4                                                                                                                                          
+
+SQL> CREATE TABLE discipline
+  2  (
+  3      id_disciplina NUMBER(2) NOT NULL,
+  4      denumire_disciplina VARCHAR2(30)
+  5      CONSTRAINT pk_discipline PRIMARY KEY (id_disciplina)
+  6      CONSTRAINT uk_denumire UNIQUE (denumire_disciplina)
+  7  );
+    CONSTRAINT pk_discipline PRIMARY KEY (id_disciplina)
+                                         *
+ERROR at line 5:
+ORA-00907: missing right parenthesis 
+
+
+SQL> CREATE TABLE note
+  2  (
+  3      id_note NUMBER(2),
+  4      id_disciplina NUMBER(2) NOT NULL,
+  5      nota NUMBER(2),
+  6      CONSTRAINT pk_discipline PRIMARY KEY (id_note),
+  7      CONSTRAINT fk_note_disc FOREIGN KEY (id_disciplina) REFERENCES discipline(id_disciplina)
+  8  );
+    CONSTRAINT fk_note_disc FOREIGN KEY (id_disciplina) REFERENCES discipline(id_disciplina)
+                                                                   *
+ERROR at line 7:
+ORA-00942: table or view does not exist 
+
+
+SQL> CREATE TABLE discipline
+  2  (
+  3      id_disciplina NUMBER(2) NOT NULL,
+  4      denumire_disciplina VARCHAR2(30),
+  5      CONSTRAINT pk_discipline PRIMARY KEY (id_disciplina),
+  6      CONSTRAINT uk_denumire UNIQUE (denumire_disciplina)
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE note
+  2  (
+  3      id_note NUMBER(2),
+  4      id_disciplina NUMBER(2) NOT NULL,
+  5      nota NUMBER(2),
+  6      CONSTRAINT pk_discipline PRIMARY KEY (id_note),
+  7      CONSTRAINT fk_note_disc FOREIGN KEY (id_disciplina) REFERENCES discipline(id_disciplina)
+  8  );
+    CONSTRAINT pk_discipline PRIMARY KEY (id_note),
+               *
+ERROR at line 6:
+ORA-02264: name already used by an existing constraint 
+
+
+SQL> CREATE TABLE note
+  2  (
+  3      id_note NUMBER(2),
+  4      id_disciplina NUMBER(2) NOT NULL,
+  5      nota NUMBER(2),
+  6      CONSTRAINT pk_note PRIMARY KEY (id_note),
+  7      CONSTRAINT fk_note_disc FOREIGN KEY (id_disciplina) REFERENCES discipline(id_disciplina)
+  8  );
+
+Table created.
+
+SQL> describe discipline
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ ID_DISCIPLINA                                                                                                     NOT NULL NUMBER(2)
+ DENUMIRE_DISCIPLINA                                                                                                        VARCHAR2(30)
+
+SQL> describe note
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ ID_NOTE                                                                                                           NOT NULL NUMBER(2)
+ ID_DISCIPLINA                                                                                                     NOT NULL NUMBER(2)
+ NOTA                                                                                                                       NUMBER(2)
+
+SQL> drop discipline
+  2  ;
+drop discipline
+     *
+ERROR at line 1:
+ORA-00950: invalid DROP option 
+
+
+SQL> drop table discipline
+  2  ;
+drop table discipline
+           *
+ERROR at line 1:
+ORA-02449: unique/primary keys in table referenced by foreign keys 
+
+
+SQL> drop table note;
+
+Table dropped.
+
+SQL> drop table discipline;
+
+Table dropped.
+
+SQL> CREATE TABLE discipline
+  2  (
+  3      id_disciplina NUMBER(2) NOT NULL,
+  4      denumire_disciplina VARCHAR2(30) NOT NULL,
+  5  
+SQL>     CONSTRAINT pk_discipline PRIMARY KEY (id_disciplina),
+SP2-0734: unknown command beginning "CONSTRAINT..." - rest of line ignored.
+SQL>     CONSTRAINT uk_denumire UNIQUE (denumire_disciplina)
+SP2-0734: unknown command beginning "CONSTRAINT..." - rest of line ignored.
+SQL> );
+SP2-0042: unknown command ")" - rest of line ignored.
+SQL> 
+SQL> CREATE TABLE discipline
+  2  (
+  3      id_disciplina NUMBER(2) NOT NULL,
+  4      denumire_disciplina VARCHAR2(30) NOT NULL,
+  5      CONSTRAINT pk_discipline PRIMARY KEY (id_disciplina),
+  6      CONSTRAINT uk_denumire UNIQUE (denumire_disciplina)
+  7  );
+
+Table created.
+
+SQL> CREATE TABLE note
+  2  (
+  3      nota NUMBER(2),
+  4      nr_matricor NUMBER(6) NOT NULL,
+  5      data_examen DATE DEFAULT SYSDATE NOT NULL,
+  6      id_disciplina NUMBER(2) NOT NULL,
+  7      CONSTRAINT fk_note_disc FOREIGN KEY (id_disciplina) REFERENCES discipline(id_disciplina),
+  8      CONSTRAINT pk_note PRIMARY KEY (id_disciplina, nr_matricol, data_examen)
+  9  );
+    CONSTRAINT pk_note PRIMARY KEY (id_disciplina, nr_matricol, data_examen)
+                                                   *
+ERROR at line 8:
+ORA-00904: "NR_MATRICOL": invalid identifier 
+
+
+SQL> CREATE TABLE note
+  2  (
+  3      nota NUMBER(2),
+  4      nr_matricol NUMBER(6) NOT NULL,
+  5      data_examen DATE DEFAULT SYSDATE NOT NULL,
+  6      id_disciplina NUMBER(2) NOT NULL,
+  7      CONSTRAINT fk_note_disc FOREIGN KEY (id_disciplina) REFERENCES discipline(id_disciplina),
+  8      CONSTRAINT pk_note PRIMARY KEY (id_disciplina, nr_matricol, data_examen)
+  9  );
+
+Table created.
+
+SQL> describe note
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ NOTA                                                                                                                       NUMBER(2)
+ NR_MATRICOL                                                                                                       NOT NULL NUMBER(6)
+ DATA_EXAMEN                                                                                                       NOT NULL DATE
+ ID_DISCIPLINA                                                                                                     NOT NULL NUMBER(2)
+
+SQL> descibe discipline
+SP2-0734: unknown command beginning "descibe di..." - rest of line ignored.
+SQL> desc discipline
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ ID_DISCIPLINA                                                                                                     NOT NULL NUMBER(2)
+ DENUMIRE_DISCIPLINA                                                                                               NOT NULL VARCHAR2(30)
+
+SQL> desc discipline
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ ID_DISCIPLINA                                                                                                     NOT NULL NUMBER(2)
+ DENUMIRE_DISCIPLINA                                                                                               NOT NULL VARCHAR2(30)
+
+SQL> desc note
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ NOTA                                                                                                                       NUMBER(2)
+ NR_MATRICOL                                                                                                       NOT NULL NUMBER(6)
+ DATA_EXAMEN                                                                                                       NOT NULL DATE
+ ID_DISCIPLINA                                                                                                     NOT NULL NUMBER(2)
+
+SQL> drop table note
+  2  ;
+
+Table dropped.
+
+SQL> CREATE TABLE note
+  2  (
+  3      nota NUMBER(2) NOT NULL,
+  4      nr_matricol NUMBER(6) NOT NULL,
+  5      data_examen DATE DEFAULT SYSDATE NOT NULL,
+  6      id_disciplina NUMBER(2) NOT NULL,
+  7      CONSTRAINT fk_note_disc FOREIGN KEY (id_disciplina) REFERENCES discipline(id_disciplina),
+  8      CONSTRAINT pk_note PRIMARY KEY (id_disciplina, nr_matricol, data_examen)
+  9  );
+
+Table created.
+
+SQL> desc note
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ NOTA                                                                                                              NOT NULL NUMBER(2)
+ NR_MATRICOL                                                                                                       NOT NULL NUMBER(6)
+ DATA_EXAMEN                                                                                                       NOT NULL DATE
+ ID_DISCIPLINA                                                                                                     NOT NULL NUMBER(2)
+
+SQL> INSERT INTO discipline VALUES(1, 'PA');
+
+1 row created.
+
+SQL> INSERT INTO discipline VALUES(2, 'PP');
+
+1 row created.
+
+SQL> INSERT INTO discipline VALUES(3, 'PC');
+
+1 row created.
+
+SQL> INSERT INTO discipline VALUES(4, 'APD');
+
+1 row created.
+
+SQL> select * discipline
+  2  ;
+select * discipline
+         *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select * from discipline;
+
+ID_DISCIPLINA DENUMIRE_DISCIPLINA                                                                                                                                                                       
+------------- ------------------------------                                                                                                                                                            
+            1 PA                                                                                                                                                                                        
+            2 PP                                                                                                                                                                                        
+            3 PC                                                                                                                                                                                        
+            4 APD                                                                                                                                                                                       
+
+SQL> INSERT INTO note VALUES(4, 1, '1-FEB-2021', 1);
+
+1 row created.
+
+SQL> INSERT INTO note VALUES(4, 1, '1-FEB-2021', 1);
+INSERT INTO note VALUES(4, 1, '1-FEB-2021', 1)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_NOTE) violated 
+
+
+SQL> INSERT INTO note VALUES(5, 1, '1-AUG-2021', 1);
+
+1 row created.
+
+SQL> INSERT INTO note VALUES(7, 2, '1-FEB-2021', 1);
+
+1 row created.
+
+SQL> INSERT INTO note VALUES(5, 2, '1-FEB-2021', 1);
+INSERT INTO note VALUES(5, 2, '1-FEB-2021', 1)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_NOTE) violated 
+
+
+SQL> INSERT INTO note VALUES(5, 2, '1-FEB-2021', 2);
+
+1 row created.
+
+SQL> select * from note
+  2  ;
+
+      NOTA NR_MATRICOL DATA_EXAM ID_DISCIPLINA                                                                                                                                                          
+---------- ----------- --------- -------------                                                                                                                                                          
+         4           1 01-FEB-21             1                                                                                                                                                          
+         5           1 01-AUG-21             1                                                                                                                                                          
+         7           2 01-FEB-21             1                                                                                                                                                          
+         5           2 01-FEB-21             2                                                                                                                                                          
+
+SQL> select * from note where denumire_disciplina = 'PA';
+select * from note where denumire_disciplina = 'PA'
+                         *
+ERROR at line 1:
+ORA-00904: "DENUMIRE_DISCIPLINA": invalid identifier 
+
+
+SQL> select * from note where id_disciplina = 1;
+
+      NOTA NR_MATRICOL DATA_EXAM ID_DISCIPLINA                                                                                                                                                          
+---------- ----------- --------- -------------                                                                                                                                                          
+         4           1 01-FEB-21             1                                                                                                                                                          
+         5           1 01-AUG-21             1                                                                                                                                                          
+         7           2 01-FEB-21             1                                                                                                                                                          
+
+SQL> INSERT INTO note VALUES(7, 2, '1-FEB-2021', 1);
+INSERT INTO note VALUES(7, 2, '1-FEB-2021', 1)
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SCOTT.PK_NOTE) violated 
+
+
+SQL> update login_lab_bd set data_sf= sysdate where laborator='Lab2';
+
+1 row updated.
+
+SQL> update login_lab_bd set durata= round((data_sf-data_in)*24*60) where laborator='Lab2';
+
+1 row updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss'), host_name
+  2  from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    TO_CHAR(STARTUP_TIM HOST_NAME                                                                                                                                          
+--------------- ---------------- ------------------- ----------------------------------------------------------------                                                                                   
+              1 db19c            12-03-2021 08:38:59 DESKTOP-04HOUK7                                                                                                                                    
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput,
+  2  to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Filimon Adrian                 334CC      Lab2       12-03-2021 12:12:12 12-03-2021 02:48:03            156                                                                                             
+
+SQL> spool off;

@@ -1,0 +1,532 @@
+CREATE TABLE departamente2 
+(
+    id_departament NUMBER(2) NOT NULL,
+    denumire_departament VARCHAR2(30),
+    telefon VARCHAR2(10)
+);
+
+CREATE TABLE grila_salariu2
+(
+    grad NUMBER(2),
+    nivel_inferior NUMBER,
+    nivel_superior NUMBER
+);
+
+CREATE TABLE angajati2
+(
+    id_angajat NUMBER(4) NOT NULL,
+    nume VARCHAR2(30),
+    prenume VARCHAR2(30),
+    functie VARCHAR2(20),
+    id_sef NUMBER(4),
+    data_angajarii DATE DEFAULT SYSDATE,
+    salariu NUMBER(7, 2) DEFAULT 2000,
+    comision NUMBER(7, 2),
+    id_departament NUMBER
+);
+
+
+ALTER TABLE departamente2 ADD CONSTRAINT pk_departamente2 PRIMARY KEY (id_departament);
+ALTER TABLE grila_salariu2 ADD CONSTRAINT pk_grila2 PRIMARY KEY (grad);
+ALTER TABLE angajati2 ADD CONSTRAINT pk_angajati2 PRIMARY KEY (id_angajat);
+
+ALTER TABLE angajati2 ADD CONSTRAINT fk_ang__dep2 FOREIGN KEY (id_departament)
+  REFERENCES departamente2(id_departament);
+ALTER TABLE angajati2 ADD CONSTRAINT fk_ang__ang2 FOREIGN KEY (id_sef)
+  REFERENCES angajati2(id_angajat);
+
+ALTER TABLE departamente2 ADD CONSTRAINT uq_denumire2 UNIQUE (denumire_departament);
+ALTER TABLE angajati2 ADD CONSTRAINT uq_nume2 UNIQUE (nume, prenume);
+
+
+
+
+INSERT INTO grila_salariu2 VALUES(1, 1, 1000);
+INSERT INTO grila_salariu2 VALUES(1, 1001, 2000);
+
+INSERT INTO departamente2 VALUES(10, 'Proiecte Software', '3212121');
+INSERT INTO departamente2 VALUES(20, 'Asigurarea Calitatii', '3212122');
+INSERT INTO departamente2 VALUES(10, 'Resurse Umane', '3212123');
+INSERT INTO departamente2 VALUES(30, 'Proiectare Software', '3212124');
+
+INSERT INTO angajati2(id_angajat, nume, prenume, functie)
+  VALUES(1001, 'Ionescu', 'Ion', 'Director');
+INSERT INTO angajati2(nume, prenume, functie)
+  VALUES('Ionescu', 'Ionel', 'Programator');
+INSERT INTO angajati2(id_angajat, nume, prenume, functie, id_sef, salariu, id_departament)
+  VALUES(1002, 'Ionescu', 'Ionel', 'Programator', 1001, 1024, 10);
+
+
+
+---
+SELECT * FROM angajati2;
+
+column nume format a20
+column prenume format a20
+column functie format a20
+column salariu format 9999.99
+SELECT nume, prenume, functie, salariu
+FROM angajati2;
+
+SELECT nume, prenume, functie, salariu
+FROM angajati2
+WHERE id_departament = 10;
+
+SELECT nume, prenume, functie, salariu
+FROM angajati2
+WHERE functie='Director';
+
+---
+
+---Modifcarea datelor
+SELECT nume FROM angajati2 WHERE id_angajat = 1002;
+UPDATE angajati2 SET nume = 'Popescu' WHERE id_angajat = 1002;
+SELECT nume FROM angajati2 WHERE id_angajat = 1002;
+
+SELECT nume, salariu, comision FROM angajati2;
+UPDATE angajati2 SET comision = 0.1 * salariu;
+SELECT nume, salariu, comision FROM angajati2;
+
+---
+
+--- Stergerea datelor
+
+INSERT INTO angajati2(id_angajat, nume, prenume, functie, id_sef, id_departament, data_angajarii)
+    VALUES(4003, 'Pop', 'Alina', 'Analist', 1001, 20, '21-NOV-1995');
+
+INSERT INTO angajati2(id_angajat, nume, prenume, functie, id_sef, id_departament, data_angajarii)
+VALUES(4004, 'Pop', 'Calin', 'Tester', 1001, 20, '01-JAN-1980');
+
+INSERT INTO angajati2(id_angajat, nume, prenume, functie, id_sef, id_departament, data_angajarii)
+VALUES(4005, 'Pop', 'Andrei', 'Manager', 1001, 20, '14-FEB-1995');
+
+SELECT nume, prenume, data_angajarii, comision
+FROM angajati2;
+
+DELETE FROM angajati2
+WHERE nume = 'Pop' AND prenume = 'Alina';
+
+SELECT nume, prenume, data_angajarii, comision
+FROM angajati2;
+
+DELETE FROM angajati2
+WHERE data_angajarii < '01-JAN-1985';
+
+SELECT nume, prenume, data_angajarii, comision
+FROM angajati2;
+
+DELETE FROM angajati2
+WHERE comision IS NULL;
+
+SELECT nume, prenume, data_angajarii, comision
+FROM angajati2;
+---
+
+
+Sa se creeze 2 tabele: discipline si note. Sa se creeze cheile primare pe cele 2 tabele si FOREIGN Keys.
+Le populam noi. Cum le putem relationa?
+
+disciplina, student, data, nota
+id_disciplina+nr_matricol+data
+
+Fara id note
+
+##### prima incercare ########
+CREATE TABLE discipline
+(
+    id_disciplina NUMBER(2) NOT NULL,
+    nr_matricor NUMBER(2) NOT NULL,
+    denumire_disciplina VARCHAR2(30),
+
+    CONSTRAINT pk_discipline PRIMARY KEY (id_disciplina),
+    CONSTRAINT uk_denumire UNIQUE (denumire_disciplina)
+);
+
+CREATE TABLE note
+(
+    id_note NUMBER(2),
+    id_disciplina NUMBER(2) NOT NULL,
+    nota NUMBER(2),
+    nume_student VARCHAR2(20)
+    CONSTRAINT pk_note PRIMARY KEY (id_note),
+    CONSTRAINT fk_note_disc FOREIGN KEY (id_disciplina) REFERENCES discipline(id_disciplina)
+);
+
+INSERT INTO discipline VALUES(1, 'PA');
+INSERT INTO discipline VALUES(2, 'PP');
+INSERT INTO discipline VALUES(3, 'PC');
+INSERT INTO discipline VALUES(4, 'APD');
+
+####### prima incercare ########
+
+####### incercarea 2 ###########
+
+CREATE TABLE discipline
+(
+    id_disciplina NUMBER(2) NOT NULL,
+    denumire_disciplina VARCHAR2(30) NOT NULL,
+    CONSTRAINT pk_discipline PRIMARY KEY (id_disciplina),
+    CONSTRAINT uk_denumire UNIQUE (denumire_disciplina)
+);
+
+CREATE TABLE note
+(
+    nota NUMBER(2) NOT NULL,
+    nr_matricol NUMBER(6) NOT NULL,
+    data_examen DATE DEFAULT SYSDATE NOT NULL,
+    id_disciplina NUMBER(2) NOT NULL,
+    CONSTRAINT fk_note_disc FOREIGN KEY (id_disciplina) REFERENCES discipline(id_disciplina),
+    CONSTRAINT pk_note PRIMARY KEY (id_disciplina, nr_matricol, data_examen)
+);
+
+####### incercarea 2 ###########
+
+INSERT INTO discipline VALUES(1, 'PA');
+INSERT INTO discipline VALUES(2, 'PP');
+INSERT INTO discipline VALUES(3, 'PC');
+INSERT INTO discipline VALUES(4, 'APD');
+
+INSERT INTO note VALUES(4, 1, '1-FEB-2021', 1);
+INSERT INTO note VALUES(5, 1, '1-AUG-2021', 1);
+INSERT INTO note VALUES(7, 2, '1-FEB-2021', 1);
+INSERT INTO note VALUES(5, 2, '1-FEB-2021', 2);
+
+
+Exercitii individuale:
+
+Exercitiul 1.
+
+CREATE TABLE users
+(
+  id NUMBER NOT NULL,
+  username VARCHAR2(20),
+  password VARCHAR2(30),
+  CONSTRAINT pk_users PRIMARY KEY (id)
+);
+
+CREATE TABLE tags 
+(
+  id NUMBER NOT NULL,
+  tagname VARCHAR2(20),
+  CONSTRAINT pk_tags PRIMARY KEY (id)
+);
+
+CREATE TABLE articles 
+(
+  id NUMBER NOT NULL,
+  iduser NUMBER NOT NULL,
+  title VARCHAR2(30),
+  content VARCHAR2(255),
+  CONSTRAINT pk_articles PRIMARY KEY (id),
+  CONSTRAINT fk_art__usr FOREIGN KEY (iduser)
+    REFERENCES users(id)
+);
+
+CREATE TABLE tags_articles
+(
+  idarticle NUMBER NOT NULL,
+  idtag NUMBER NOT NULL,
+  CONSTRAINT pk_tagsarticles PRIMARY KEY (idarticle, idtag),
+  CONSTRAINT fk_tar__art FOREIGN KEY (idarticle)
+    REFERENCES articles(id),
+  CONSTRAINT fk_tar__tags FOREIGN KEY (idtag)
+    REFERENCES tags(id)
+);
+
+CREATE TABLE comments 
+(
+  id NUMBER NOT NULL,
+  article_comment VARCHAR2(50),
+  idarticle NUMBER NOT NULL,
+  iduser NUMBER NOT NULL,
+  CONSTRAINT pk_comments PRIMARY KEY (id),
+  CONSTRAINT fk_com__art FOREIGN KEY (idarticle)
+    REFERENCES articles(id),
+  CONSTRAINT fk_com__usr FOREIGN KEY (iduser)
+    REFERENCES users(id)
+);
+
+Exercitiul 2.
+
+CREATE TABLE categories 
+(
+  id_category NUMBER NOT NULL, 
+  category VARCHAR2(20),
+  CONSTRAINT pk_categories PRIMARY KEY (id_category)
+);
+
+CREATE TABLE ingredients
+(
+  id_ingredient NUMBER NOT NULL,
+  id_category NUMBER NOT NULL,
+  ingredient VARCHAR2(30),
+  CONSTRAINT pk_ingredients PRIMARY KEY (id_ingredient),
+  CONSTRAINT fk_ingredients__categories FOREIGN KEY (id_category)
+    REFERENCES categories(id_category)
+);
+
+CREATE TABLE recipes
+(
+  id_recipe NUMBER NOT NULL,
+  title VARCHAR2(30),
+  instructions VARCHAR2(100),
+  CONSTRAINT pk_recipes PRIMARY KEY (id_recipe)
+);
+
+CREATE TABLE link
+(
+  id_recipe NUMBER NOT NULL,
+  id_ingredient NUMBER NOT NULL,
+  quantity NUMBER NOT NULL,
+  mu VARCHAR2(30),
+  CONSTRAINT pk_link PRIMARY KEY (id_recipe, id_ingredient),
+  CONSTRAINT fk_link__recipes FOREIGN KEY (id_recipe)
+    REFERENCES recipes(id_recipe),
+  CONSTRAINT fk_link__ingredients FOREIGN KEY (id_ingredient)
+    REFERENCES ingredients(id_ingredient)
+);
+
+Exercitiul 3.
+
+CREATE TABLE car_types 
+(
+  id_type NUMBER NOT NULL,
+  type VARCHAR2(20),
+  CONSTRAINT pk_cartypes PRIMARY KEY (id_type)
+);
+
+CREATE TABLE producers 
+(
+  id_producer NUMBER NOT NULL,
+  name VARCHAR2(30),
+  CONSTRAINT pk_producers PRIMARY KEY (id_producer)
+);
+
+CREATE TABLE cars
+(
+  id_car NUMBER NOT NULL,
+  id_producer NUMBER NOT NULL,
+  id_type NUMBER NOT NULL,
+  registration_no VARCHAR2(30),
+  year NUMBER NOT NULL,
+  CONSTRAINT pk_cars PRIMARY KEY (id_car),
+  CONSTRAINT fk_cars__cartypes FOREIGN KEY (id_type)
+    REFERENCES car_types(id_type),
+  CONSTRAINT fk_cars__producers FOREIGN KEY (id_producer)
+    REFERENCES producers(id_producer)
+);
+
+CREATE TABLE licenses
+(
+  id_license NUMBER NOT NULL,
+  type VARCHAR2(20),
+  CONSTRAINT pk_licenses PRIMARY KEY (id_license)
+);
+
+CREATE TABLE drivers
+(
+  id_driver NUMBER NOT NULL,
+  name VARCHAR2(30),
+  age NUMBER NOT NULL,
+  CONSTRAINT pk_drivers PRIMARY KEY (id_driver)
+);
+
+CREATE TABLE licenses_drivers
+(
+  id_driver NUMBER NOT NULL,
+  id_license NUMBER NOT NULL,
+  year NUMBER NOT NULL,
+  CONSTRAINT pk_licdriv PRIMARY KEY (id_driver, id_license),
+  CONSTRAINT fk_licdriv__drivers FOREIGN KEY (id_driver)
+    REFERENCES drivers(id_driver),
+  CONSTRAINT fk_licdriv__licenses FOREIGN KEY (id_license)
+    REFERENCES licenses(id_license)
+);
+
+CREATE TABLE cars_drivers
+(
+  id_driver NUMBER NOT NULL,
+  id_car NUMBER NOT NULL,
+  "date" DATE DEFAULT SYSDATE,
+  CONSTRAINT pk_carsdrivers PRIMARY KEY (id_driver, id_car),
+  CONSTRAINT fk_carsdrivers__cars FOREIGN KEY (id_car)
+    REFERENCES cars(id_car),
+  CONSTRAINT fk_carsdrivers__drivers FOREIGN KEY (id_driver)
+    REFERENCES drivers(id_driver)
+);
+
+Exercitiul 4
+
+CREATE TABLE Flower_types
+(
+  id_type NUMBER NOT NULL,
+  type VARCHAR2(30),
+  CONSTRAINT pk_fltyp PRIMARY KEY (id_type)
+);
+
+CREATE TABLE Flowers
+(
+  id_flower NUMBER NOT NULL,
+  name VARCHAR2(30),
+  price FLOAT NOT NULL,
+  color VARCHAR2(30),
+  quantity NUMBER,
+  id_type NUMBER NOT NULL,
+  CONSTRAINT pk_flowers PRIMARY KEY (id_flower),
+  CONSTRAINT fk_flowers__fltyp FOREIGN KEY (id_type)
+    REFERENCES Flower_types(id_type)
+);
+
+CREATE TABLE Buquette_types
+(
+  id_type NUMBER NOT NULL,
+  type VARCHAR2(30),
+  CONSTRAINT pk_buqtyp PRIMARY KEY (id_type)
+);
+
+CREATE TABLE Buquettes 
+(
+  id_buquette NUMBER NOT NULL,
+  name VARCHAR2(30),
+  id_type NUMBER NOT NULL,
+  CONSTRAINT pk_buquettes PRIMARY KEY (id_buquette),
+  CONSTRAINT fk_buq__buqtyp FOREIGN KEY (id_type)
+    REFERENCES Buquette_types(id_type)
+);
+
+CREATE TABLE flowers_buquette
+(
+  id_buquette NUMBER NOT NULL,
+  id_flower NUMBER NOT NULL,
+  number_flower NUMBER,
+  CONSTRAINT pk_flowbuq PRIMARY KEY (id_buquette, id_flower),
+  CONSTRAINT fk_flowbuq__flowers FOREIGN KEY (id_flower)
+    REFERENCES Flowers(id_flower),
+  CONSTRAINT fk_flowbuq__buquettes FOREIGN KEY (id_buquette)
+    REFERENCES Buquettes(id_buquette)
+);
+
+Exercitiul 5.
+
+CREATE TABLE book_types
+(
+  id_type NUMBER NOT NULL,
+  type VARCHAR2(30),
+  CONSTRAINT pk_booktypes PRIMARY KEY (id_type)
+);
+
+CREATE TABLE publishers
+(
+  id_publisher NUMBER NOT NULL,
+  name VARCHAR2(30),
+  CONSTRAINT pk_publishers PRIMARY KEY (id_publisher)
+);
+
+CREATE TABLE books
+(
+  id_book NUMBER NOT NULL,
+  id_type NUMBER NOT NULL,
+  id_publisher NUMBER NOT NULL,
+  title VARCHAR2(30),
+  no_pages NUMBER,
+  publishing_year NUMBER,
+  CONSTRAINT pk_books PRIMARY KEY (id_book),
+  CONSTRAINT fk_books__book_types FOREIGN KEY (id_type)
+    REFERENCES book_types(id_type),
+  CONSTRAINT fk_books__publishers FOREIGN KEY (id_publisher)
+    REFERENCES publishers(id_publisher)
+);
+
+CREATE TABLE authors 
+(
+  id_authors NUMBER NOT NULL,
+  firstname VARCHAR2(30),
+  lastname VARCHAR2(30),
+  CONSTRAINT pk_authors PRIMARY KEY (id_authors)
+);
+
+CREATE TABLE books_authors
+(
+  id_book NUMBER NOT NULL,
+  id_author NUMBER NOT NULL,
+  CONSTRAINT pk_booksauthors PRIMARY KEY (id_book, id_author),
+  CONSTRAINT fk_booksauthors__book FOREIGN KEY (id_book)
+    REFERENCES books(id_book),
+  CONSTRAINT fk_booksauthors__authors FOREIGN KEY (id_author)
+    REFERENCES authors(id_authors)
+);
+
+Exercitiul 6.
+
+CREATE TABLE Categories
+(
+  id_category NUMBER NOT NULL,
+  category VARCHAR2(20),
+  CONSTRAINT pk_categories PRIMARY KEY (id_category)
+);
+
+CREATE TABLE Bands
+(
+  id_band NUMBER NOT NULL,
+  name VARCHAR2(20),
+  CONSTRAINT pk_bands PRIMARY KEY (id_band)
+);
+
+CREATE TABLE Albums
+(
+  id_album NUMBER NOT NULL,
+  title VARCHAR2(20),
+  year NUMBER,
+  id_band NUMBER NOT NULL,
+  CONSTRAINT pk_albums PRIMARY KEY (id_album),
+  CONSTRAINT fk_albums__bands FOREIGN KEY (id_band)
+    REFERENCES Bands(id_band)
+);
+
+CREATE TABLE Songs 
+(
+  id_song NUMBER NOT NULL,
+  id_category NUMBER NOT NULL,
+  id_album NUMBER NOT NULL,
+  title VARCHAR2(20),
+  length NUMBER,
+  content VARCHAR2(20),
+  CONSTRAINT pk_songs PRIMARY KEY (id_song),
+  CONSTRAINT fk_songs__categories FOREIGN KEY (id_category)
+    REFERENCES Categories(id_category),
+  CONSTRAINT fk_songs__albums FOREIGN KEY (id_album)
+    REFERENCES Albums(id_album)
+);
+
+CREATE TABLE Artists
+(
+  id_artist NUMBER NOT NULL,
+  id_band NUMBER NOT NULL,
+  firstname VARCHAR2(20),
+  lastname VARCHAR2(20),
+  date_of_birth DATE DEFAULT SYSDATE,
+  CONSTRAINT pk_artists PRIMARY KEY (id_artist),
+  CONSTRAINT fk_artists__bands FOREIGN KEY (id_band)
+    REFERENCES Bands(id_band)
+);
+
+CREATE TABLE Composers
+(
+  id_song NUMBER NOT NULL,
+  id_artist NUMBER NOT NULL,
+  CONSTRAINT pk_composers PRIMARY KEY (id_song, id_artist),
+  CONSTRAINT fk_composers__songs FOREIGN KEY (id_song)
+    REFERENCES Songs(id_song),
+  CONSTRAINT fk_composers__artists FOREIGN KEY (id_artist)
+    REFERENCES Artists(id_artist)
+)
+
+
+update login_lab_bd set data_sf= sysdate where laborator='Lab2';
+update login_lab_bd set durata= round((data_sf-data_in)*24*60) where laborator='Lab2';
+commit;
+select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss’), host_name
+from v$instance;
+select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput,
+to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+spool off; 
