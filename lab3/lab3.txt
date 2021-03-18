@@ -1,0 +1,137 @@
+
+spool C:\Users\Adrian\Documents\bd\spool_bd_lab3_18mar2021.lst
+set lines 200
+set pages 100
+select to_char(sysdate, ’dd-mm-yyyy hh:mi:ss’) from dual;
+insert into login_lab_bd values( 'Filimon Adrian', '334CC', 'Lab3', user, sysdate, null, null);
+select * from login_lab_bd;
+
+
+-- metoda1
+Metoda I
+Se creează tabelul folosind comanda DDL CREATE;
+Se iau informațiile din tabelul original și se inserează în copie folosind comanda INSERT cu un SELECT.
+
+create table angajati3 (
+        id_ang NUMBER(4),
+        nume VARCHAR(20),
+        functie VARCHAR2(9),
+        id_sef NUMBER(4), 
+        data_and DATE,
+        salariu NUMBER(7, 2),
+        comision NUMBER(7, 2),
+        id_dep NUMBER(2)      
+);
+
+insert into angajati3 select * from emp;
+
+--- metoda 2
+Se folosește comanda CREATE cu SELECT pentru inserare.
+
+create table angajati3 as select * from emp;
+
+
+Ex1:
+Să se selecteze id_ang, nume, functie și salariu pentru angajatii care au același sef. Id-ul șefului se va introduce de la tastatură.
+
+SELECT id_ang, nume, functie, salariu
+    FROM angajati
+    WHERE id_sef = &id_sef;
+
+Ex. 2
+Să se selecteze numele, funcția și salariu pentru angajații care au aceași funcție. Funcția va fi introdusa de la tastatură.
+
+SELECT nume, '&functie' functie, salariu
+    FROM angajati
+    WHERE functie = &functie;
+
+
+Ex. 3
+SELECT nume, functie, &salariu_anual salariu_anual
+    FROM &tabel
+    WHERE &nume_coloana = &valoare_coloana;
+
+Spre deosebire de variabilele cu un singur ampersand, o variabilă cu dublu ampersand va fi
+stocată și poate fi apelată pe toată sesiunea de lucru. Definirea se face similar &&nume_variabila
+și va fi cerută o singură dată. Folosirea ei de mai multe ori în cadrul comenzii se face apelând-o cu &nume_variabila.
+
+Ex. 4
+
+Să se selecteze numele, funcția și venitul lunar pentru toți angajații care au venitul lunar mai mare de 2000. Venitul lunar este o funcție care are formula salariu + nvl(comision, 0).
+
+SELECT nume, functie, &&venit_lunar venit_lunar
+    FROM angajati
+    WHERE &venit_lunar > 2000;
+
+OBS!
+UNDEFINE venit_lunar
+nvl(param1, param2) - daca param1 e null il inlocuieste cu param2
+
+
+EX. 5 -- FISIER
+
+SELECT id_ang, nume, functie, data_ang
+    FROM angajati
+    WHERE functie = '&1' AND data_ang > '&2'
+    ORDER BY data_ang;
+
+Ex. 6 -- FISIER
+Să se selecteze numele, salariul și funcția angajaților care au aceeași funcție.
+Funcția se va da de la tastatură. Se vor scrie următoarele comenzi într-un fisier (de exemplu ex6.sql)
+
+ACCEPT functie_ang char prompt 'Introduceti functia angajatului: '
+SELECT nume, salariu, comision
+    FROM angajati
+    WHERE functie='&functie_ang';
+
+undefine functie_ang
+
+Ex. 7 -- FISIER
+Să se adauge un nou angajat. La introducerea salariului caracterele să fie ascunse.
+
+accept id_ang char prompt 'Introduceti ecusonul angajatului: '
+accept nume char prompt: 'Introduceti numele angajatului: '
+accept functie char prompt: 'Introduceti functia angajatului:'
+accept salariu char prompt: 'Introduceti salariul angajatului:' hide
+
+INSERT INTO angajati(id_ang, nume, functie, salariu)
+    VALUES (&id_ang, '&nume, '&functie', &salariu);
+
+undefine id_ang
+undefine functie
+undefine nume
+undefine salariu
+
+Ex. 8
+
+Să se calculeze o primă de 15% pentru toți angajații din departamentul 20.
+
+define procent_prima = 0.15
+define id_dep = 20
+
+SELECT nume, salariu, salariu*&procent_prima prima
+    FROM angajati
+    WHERE id_dep = &id_dep;
+
+undefine procent_prima
+undefine id_dep
+
+Pentru a vedea setările tuturor variabilelor active, folosiți comanda DEFINE.
+
+
+sa se scrie o lista cu Toti angajatii subordonati unui sef, dar care au venit in firma inaintea lui
+
+ecusonul si data angajarii sefului se introduc de la tastatura 
+NUME DATA ANGAJARE JOB ECUSON_SEF
+
+- cel putin 4 metode
+
+
+update login_lab_bd set data_sf= sysdate where laborator='Lab3';
+update login_lab_bd set durata= round((data_sf-data_in)*24*60) where laborator='Lab3';
+commit;
+select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss’), host_name
+from v$instance;
+select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput,
+to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+spool off; 

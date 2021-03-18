@@ -1,0 +1,587 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+18-03-2021 11:25:15                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values( 'Filimon Adrian', '334CC', 'Lab3', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Filimon Adrian                 334CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        156                                                                                                          
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21                                                                                                                               
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21                                                                                                                               
+
+SQL> start C:\Users\Adrian\Documents\bd\1.sql
+  3  ;
+Enter value for id_sef: 7908
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7908 Ecuson_sef from angajati
+Enter value for data_ang: 3-DEC-1981
+Enter value for data_ang_sef: 3-dec-1981
+old   2:     WHERE &data_ang < '&data_ang_sef'
+new   2:     WHERE 3-DEC-1981 < '3-dec-1981'
+    WHERE 3-DEC-1981 < '3-dec-1981'
+            *
+ERROR at line 2:
+ORA-00904: "DEC": invalid identifier 
+
+
+SQL> select * from angajati
+  2  ;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+
+14 rows selected.
+
+SQL> set lines 200
+SQL> set pages 100
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+
+14 rows selected.
+
+SQL> start C:\Users\Adrian\Documents\bd\1.sql
+Enter value for id_sef: 7902
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+Enter value for data_ang_sef: '03-DEC-81'
+old   2:     WHERE data_ang < '&data_ang_sef'
+new   2:     WHERE data_ang < ''03-DEC-81''
+    WHERE data_ang < ''03-DEC-81''
+                       *
+ERROR at line 2:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> start C:\Users\Adrian\Documents\bd\1.sql
+Enter value for id_sef: 7902
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+Enter value for data_ang_sef: 03-DEC-81
+old   2:     WHERE data_ang < '&data_ang_sef'
+new   2:     WHERE data_ang < '03-DEC-81'
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+ALLEN                          20-FEB-81 SALESMAN                   7902                                                                                                                                
+WARD                           22-FEB-81 SALESMAN                   7902                                                                                                                                
+JONES                          02-APR-81 MANAGER                    7902                                                                                                                                
+MARTIN                         28-SEP-81 SALESMAN                   7902                                                                                                                                
+BLAKE                          01-MAY-81 MANAGER                    7902                                                                                                                                
+CLARK                          09-JUN-81 MANAGER                    7902                                                                                                                                
+KING                           17-NOV-81 PRESIDENT                  7902                                                                                                                                
+TURNER                         08-SEP-81 SALESMAN                   7902                                                                                                                                
+
+9 rows selected.
+
+SQL> start C:\Users\Adrian\Documents\bd\1.sql
+Enter value for id_sef: 7902
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+Enter value for data_ang_sef: '03-DEC-81'
+Enter value for id_sef: 7902
+old   2:     WHERE data_ang < '&data_ang_sef' and id_sef = &id_sef
+new   2:     WHERE data_ang < ''03-DEC-81'' and id_sef = 7902
+    WHERE data_ang < ''03-DEC-81'' and id_sef = 7902
+                       *
+ERROR at line 2:
+ORA-00933: SQL command not properly ended 
+
+
+SQL> start C:\Users\Adrian\Documents\bd\1.sql
+Enter value for id_sef: 7902
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+Enter value for data_ang_sef: 03-DEC-81
+Enter value for id_sef: 7902
+old   2:     WHERE data_ang < '&data_ang_sef' and id_sef = &id_sef
+new   2:     WHERE data_ang < '03-DEC-81' and id_sef = 7902
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+
+SQL> start C:\Users\Adrian\Documents\bd\2.sql
+SP2-0136: DEFINE requires an equal sign (=)
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+Enter value for data_ang_sef: 3-dec-123
+old   2:     WHERE data_ang < &data_ang_sef and id_sef = &id_sef
+new   2:     WHERE data_ang < 3-dec-123 and id_sef = 7902
+    WHERE data_ang < 3-dec-123 and id_sef = 7902
+                       *
+ERROR at line 2:
+ORA-00904: "DEC": invalid identifier 
+
+
+SQL> start C:\Users\Adrian\Documents\bd\2.sql
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+old   2:     WHERE data_ang < &data_ang_sef and id_sef = &id_sef
+new   2:     WHERE data_ang < 03-DEC-81 and id_sef = 7902
+    WHERE data_ang < 03-DEC-81 and id_sef = 7902
+                        *
+ERROR at line 2:
+ORA-00904: "DEC": invalid identifier 
+
+
+SQL> start C:\Users\Adrian\Documents\bd\2.sql
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+old   2:     WHERE data_ang < '&data_ang_sef' and id_sef = &id_sef
+new   2:     WHERE data_ang < '03-DEC-81' and id_sef = 7902
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+
+SQL> start C:\Users\Adrian\Documents\bd\3.sql
+Introduceti ecusonul sefului:7902
+Introduceti data de angajare a sefului:03-DEC-81
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB,       7902 Ecuson_sef from angajati
+old   2:     WHERE data_ang < '&data_ang_sef' and id_sef = &id_sef
+new   2:     WHERE data_ang < '03-DEC-81' and id_sef =       7902
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+
+SQL> define
+DEFINE _DATE           = "18-MAR-21" (CHAR)
+DEFINE _CONNECT_IDENTIFIER = "DB19c" (CHAR)
+DEFINE _USER           = "SCOTT" (CHAR)
+DEFINE _PRIVILEGE      = "" (CHAR)
+DEFINE _SQLPLUS_RELEASE = "1903000000" (CHAR)
+DEFINE _EDITOR         = "Notepad" (CHAR)
+DEFINE _O_VERSION      = "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0" (CHAR)
+DEFINE _O_RELEASE      = "1903000000" (CHAR)
+DEFINE ID_SEF          =       7902 (NUMBER)
+DEFINE DATA_ANG_SEF    = "03-DEC-81" (CHAR)
+SQL> undefine id_sef
+SQL> undefine data_ang_sef
+SQL> start C:\Users\Adrian\Documents\bd\3.sql
+Introduceti ecusonul sefului:7902
+Introduceti data de angajare a sefului:03-DEC-81
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB,       7902 Ecuson_sef from angajati
+old   2:     WHERE data_ang < '&data_ang_sef' and id_sef = &id_sef
+new   2:     WHERE data_ang < '03-DEC-81' and id_sef =       7902
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+
+SQL> start C:\Users\Adrian\Documents\bd\3.sql
+Introduceti ecusonul sefului:7902
+Introduceti data de angajare a sefului:03-DEC-81
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+old   2:     WHERE data_ang < '&data_ang_sef' and id_sef = &id_sef
+new   2:     WHERE data_ang < '03-DEC-81' and id_sef = 7902
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+
+SQL> define
+DEFINE _DATE           = "18-MAR-21" (CHAR)
+DEFINE _CONNECT_IDENTIFIER = "DB19c" (CHAR)
+DEFINE _USER           = "SCOTT" (CHAR)
+DEFINE _PRIVILEGE      = "" (CHAR)
+DEFINE _SQLPLUS_RELEASE = "1903000000" (CHAR)
+DEFINE _EDITOR         = "Notepad" (CHAR)
+DEFINE _O_VERSION      = "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0" (CHAR)
+DEFINE _O_RELEASE      = "1903000000" (CHAR)
+DEFINE ID_SEF          = "7902" (CHAR)
+DEFINE DATA_ANG_SEF    = "03-DEC-81" (CHAR)
+SQL> start C:\Users\Adrian\Documents\bd\4.sql
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+
+SQL> start C:\Users\Adrian\Documents\bd\4.sql
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+
+SQL> start C:\Users\Adrian\Documents\bd\5.sql
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &&id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+old   2:     WHERE data_ang < '&data_ang_sef' and id_sef = &&id_sef
+new   2:     WHERE data_ang < '03-DEC-81' and id_sef = 7902
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+
+SQL> define
+DEFINE _DATE           = "18-MAR-21" (CHAR)
+DEFINE _CONNECT_IDENTIFIER = "DB19c" (CHAR)
+DEFINE _USER           = "SCOTT" (CHAR)
+DEFINE _PRIVILEGE      = "" (CHAR)
+DEFINE _SQLPLUS_RELEASE = "1903000000" (CHAR)
+DEFINE _EDITOR         = "Notepad" (CHAR)
+DEFINE _O_VERSION      = "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0" (CHAR)
+DEFINE _O_RELEASE      = "1903000000" (CHAR)
+DEFINE ID_SEF          = "7902" (CHAR)
+DEFINE DATA_ANG_SEF    = "03-DEC-81" (CHAR)
+SQL> undefine data_ang_sef
+SQL> undefine id_sef
+SQL> start C:\Users\Adrian\Documents\bd\5.sql
+Enter value for id_sef: 7902
+old   1: SELECT nume, data_ang Data_angajare, functie JOB, &&id_sef Ecuson_sef from angajati
+new   1: SELECT nume, data_ang Data_angajare, functie JOB, 7902 Ecuson_sef from angajati
+Enter value for data_ang_sef: 03-DEC-81
+old   2:     WHERE data_ang < '&data_ang_sef' and id_sef = &&id_sef
+new   2:     WHERE data_ang < '03-DEC-81' and id_sef = 7902
+
+NUME                           DATA_ANGA JOB                  ECUSON_SEF                                                                                                                                
+------------------------------ --------- -------------------- ----------                                                                                                                                
+SMITH                          17-DEC-80 CLERK                      7902                                                                                                                                
+
+SQL> describe angajati3
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ EMPNO                                                                                                                      NUMBER(4)
+ ENAME                                                                                                                      VARCHAR2(10)
+ JOB                                                                                                                        VARCHAR2(9)
+ MGR                                                                                                                        NUMBER(4)
+ HIREDATE                                                                                                                   DATE
+ SAL                                                                                                                        NUMBER(7,2)
+ COMM                                                                                                                       NUMBER(7,2)
+ DEPTNO                                                                                                                     NUMBER(2)
+
+SQL> drop table angajati3
+  2  ;
+
+Table dropped.
+
+SQL> create table angajati3 (
+  2          id_ang NUMBER(4),
+  3          nume VARCHAR(20),
+  4          functie VARCHAR2(9),
+  5          id_sef NUMBER(4),
+  6          data_and DATE,
+  7          salariu NUMBER(7, 2),
+  8          comision NUMBER(7, 2),
+  9          id_dep NUMBER(2)
+ 10  );
+
+Table created.
+
+SQL> insert into angajati3 select * from emp;
+
+14 rows created.
+
+SQL> SELECT id_ang, nume, functie, salariu
+  2      FROM angajati
+  3      WHERE id_sef = &id_sef;
+old   3:     WHERE id_sef = &id_sef
+new   3:     WHERE id_sef = 7902
+
+    ID_ANG NUME                           FUNCTIE                 SALARIU                                                                                                                               
+---------- ------------------------------ -------------------- ----------                                                                                                                               
+      7369 SMITH                          CLERK                       800                                                                                                                               
+
+SQL> define
+DEFINE _DATE           = "18-MAR-21" (CHAR)
+DEFINE _CONNECT_IDENTIFIER = "DB19c" (CHAR)
+DEFINE _USER           = "SCOTT" (CHAR)
+DEFINE _PRIVILEGE      = "" (CHAR)
+DEFINE _SQLPLUS_RELEASE = "1903000000" (CHAR)
+DEFINE _EDITOR         = "Notepad" (CHAR)
+DEFINE _O_VERSION      = "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0" (CHAR)
+DEFINE _O_RELEASE      = "1903000000" (CHAR)
+DEFINE ID_SEF          = "7902" (CHAR)
+SQL> undefine id_sef
+SQL> SELECT id_ang, nume, functie, salariu
+  2      FROM angajati
+  3      WHERE id_sef = &id_sef;
+Enter value for id_sef: 7839
+old   3:     WHERE id_sef = &id_sef
+new   3:     WHERE id_sef = 7839
+
+    ID_ANG NUME                           FUNCTIE                 SALARIU                                                                                                                               
+---------- ------------------------------ -------------------- ----------                                                                                                                               
+      7566 JONES                          MANAGER                    2975                                                                                                                               
+      7698 BLAKE                          MANAGER                    2850                                                                                                                               
+      7782 CLARK                          MANAGER                    2450                                                                                                                               
+
+SQL> set verify off
+SQL> SELECT nume, '&functie' functie, salariu
+  2      FROM angajati
+  3      WHERE functie = &functie;
+Enter value for functie: Analist Programator
+Enter value for functie: 'ANALYST'
+
+NUME                           FUNCTIE                SALARIU                                                                                                                                           
+------------------------------ ------------------- ----------                                                                                                                                           
+SCOTT                          Analist Programator       3000                                                                                                                                           
+FORD                           Analist Programator       3000                                                                                                                                           
+
+SQL> SELECT nume, functie, &salariu_anual salariu_anual
+  2      FROM &tabel
+  3      WHERE &nume_coloana = &valoare_coloana;
+Enter value for salariu_anual: salariu*12
+Enter value for tabel: angajati
+Enter value for nume_coloana: id_dep
+Enter value for valoare_coloana: 20
+
+NUME                           FUNCTIE              SALARIU_ANUAL                                                                                                                                       
+------------------------------ -------------------- -------------                                                                                                                                       
+SMITH                          CLERK                         9600                                                                                                                                       
+JONES                          MANAGER                      35700                                                                                                                                       
+SCOTT                          ANALYST                      36000                                                                                                                                       
+ADAMS                          CLERK                        13200                                                                                                                                       
+FORD                           ANALYST                      36000                                                                                                                                       
+
+SQL> SELECT nume, functie, &&venit_lunar venit_lunar
+  2      FROM angajati
+  3      WHERE &venit_lunar > 2000;
+Enter value for venit_lunar: salariu*nvl(comision,0)
+
+NUME                           FUNCTIE              VENIT_LUNAR                                                                                                                                         
+------------------------------ -------------------- -----------                                                                                                                                         
+ALLEN                          SALESMAN                  480000                                                                                                                                         
+WARD                           SALESMAN                  625000                                                                                                                                         
+MARTIN                         SALESMAN                 1750000                                                                                                                                         
+
+SQL> define
+DEFINE _DATE           = "18-MAR-21" (CHAR)
+DEFINE _CONNECT_IDENTIFIER = "DB19c" (CHAR)
+DEFINE _USER           = "SCOTT" (CHAR)
+DEFINE _PRIVILEGE      = "" (CHAR)
+DEFINE _SQLPLUS_RELEASE = "1903000000" (CHAR)
+DEFINE _EDITOR         = "Notepad" (CHAR)
+DEFINE _O_VERSION      = "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0" (CHAR)
+DEFINE _O_RELEASE      = "1903000000" (CHAR)
+DEFINE VENIT_LUNAR     = "salariu*nvl(comision,0)" (CHAR)
+SQL> undefine venit_lunar
+SQL> start C:\Users\Adrian\Documents\bd\ang.sql
+Enter value for 1: CLERK 15-AUG-1981
+Enter value for 2: 15-aug-1981
+
+no rows selected
+
+SQL> start C:\Users\Adrian\Documents\bd\ang.sql
+Enter value for 1: CLERK
+Enter value for 2: 15-aug-1981
+
+    ID_ANG NUME                           FUNCTIE              DATA_ANG                                                                                                                                 
+---------- ------------------------------ -------------------- ---------                                                                                                                                
+      7900 JAMES                          CLERK                03-DEC-81                                                                                                                                
+      7934 MILLER                         CLERK                23-JAN-82                                                                                                                                
+      7876 ADAMS                          CLERK                23-MAY-87                                                                                                                                
+
+SQL> 
+SQL> start C:\Users\Adrian\Documents\bd\ex6.sql
+Introduceti functia angajatului: MANAGER
+
+NUME                              SALARIU   COMISION                                                                                                                                                    
+------------------------------ ---------- ----------                                                                                                                                                    
+JONES                                2975                                                                                                                                                               
+BLAKE                                2850                                                                                                                                                               
+CLARK                                2450                                                                                                                                                               
+
+SQL> start C:\Users\Adrian\Documents\bd\ex7.sql
+Introduceti ecusonul angajatului:1111
+SP2-0003: Ill-formed ACCEPT command starting as 'Introduceti numele angajatului:'
+SP2-0003: Ill-formed ACCEPT command starting as 'Introduceti functia angajatului:'
+SP2-0003: Ill-formed ACCEPT command starting as 'Introduceti salariul angajatului:' hide
+Enter value for nume: IONESCU
+Enter value for functie: CLERK
+Enter value for salariu: 12345
+
+1 row created.
+
+SQL> select * from angajati
+  2  ;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+      1111 IONESCU                        CLERK                                          12345                                                                                                          
+
+15 rows selected.
+
+SQL> define procent_prima = 0.15
+SQL> define id_dep = 20
+SQL> 
+SQL> SELECT nume, salariu, salariu*&procent_prima prima
+  2      FROM angajati
+  3      WHERE id_dep = &id_dep;
+
+NUME                              SALARIU      PRIMA                                                                                                                                                    
+------------------------------ ---------- ----------                                                                                                                                                    
+SMITH                                 800        120                                                                                                                                                    
+JONES                                2975     446.25                                                                                                                                                    
+SCOTT                                3000        450                                                                                                                                                    
+ADAMS                                1100        165                                                                                                                                                    
+FORD                                 3000        450                                                                                                                                                    
+
+SQL> 
+SQL> undefine procent_prima
+SQL> undefine id_dep
+SQL> start C:\Users\Adrian\Documents\bd\independent.sql
+Enter value for id_dep: 20
+Enter value for med_income: 2000
+Enter value for id_dep: 20
+
+NUME                           '2 SALARIU_ANUAL                                                                                                                                                         
+------------------------------ -- -------------                                                                                                                                                         
+SMITH                          20          9600                                                                                                                                                         
+JONES                          20         35700                                                                                                                                                         
+SCOTT                          20         36000                                                                                                                                                         
+ADAMS                          20         13200                                                                                                                                                         
+FORD                           20         36000                                                                                                                                                         
+
+SQL> start C:\Users\Adrian\Documents\bd\ind1.sql
+Introduceti id_dep: 20
+Introduceti med_income: 2000
+
+NUME                           '20'       SALARIU_ANUAL                                                                                                                                                 
+------------------------------ ---------- -------------                                                                                                                                                 
+SMITH                                  20          9600                                                                                                                                                 
+JONES                                  20         35700                                                                                                                                                 
+SCOTT                                  20         36000                                                                                                                                                 
+ADAMS                                  20         13200                                                                                                                                                 
+FORD                                   20         36000                                                                                                                                                 
+
+SQL> start C:\Users\Adrian\Documents\bd\ind2.sql
+
+NUME                           '20'       SALARIU_ANUAL                                                                                                                                                 
+------------------------------ ---------- -------------                                                                                                                                                 
+SMITH                                  20          9600                                                                                                                                                 
+JONES                                  20         35700                                                                                                                                                 
+SCOTT                                  20         36000                                                                                                                                                 
+ADAMS                                  20         13200                                                                                                                                                 
+FORD                                   20         36000                                                                                                                                                 
+
+SQL> define
+DEFINE _DATE           = "18-MAR-21" (CHAR)
+DEFINE _CONNECT_IDENTIFIER = "DB19c" (CHAR)
+DEFINE _USER           = "SCOTT" (CHAR)
+DEFINE _PRIVILEGE      = "" (CHAR)
+DEFINE _SQLPLUS_RELEASE = "1903000000" (CHAR)
+DEFINE _EDITOR         = "Notepad" (CHAR)
+DEFINE _O_VERSION      = "Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0" (CHAR)
+DEFINE _O_RELEASE      = "1903000000" (CHAR)
+DEFINE ID_DEP          =         20 (NUMBER)
+DEFINE MED_INCOME      =       2000 (NUMBER)
+SQL> undefine med_income
+SQL> undefine id_dep
+SQL> start C:\Users\Adrian\Documents\bd\ind2.sql
+Enter value for id_dep: 20
+Enter value for med_income: 2000
+
+NUME                           '2 SALARIU_ANUAL                                                                                                                                                         
+------------------------------ -- -------------                                                                                                                                                         
+SMITH                          20          9600                                                                                                                                                         
+JONES                          20         35700                                                                                                                                                         
+SCOTT                          20         36000                                                                                                                                                         
+ADAMS                          20         13200                                                                                                                                                         
+FORD                           20         36000                                                                                                                                                         
+
+SQL> start C:\Users\Adrian\Documents\bd\ind2.sql
+Enter value for med_income: 13200
+
+NUME                           '2 SALARIU_ANUAL                                                                                                                                                         
+------------------------------ -- -------------                                                                                                                                                         
+JONES                          20         35700                                                                                                                                                         
+SCOTT                          20         36000                                                                                                                                                         
+FORD                           20         36000                                                                                                                                                         
+
+SQL> update login_lab_bd set data_sf= sysdate where laborator='Lab3';
+
+2 rows updated.
+
+SQL> update login_lab_bd set durata= round((data_sf-data_in)*24*60) where laborator='Lab3';
+
+2 rows updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss'), host_name
+  2  from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    TO_CHAR(STARTUP_TIM HOST_NAME                                                                                                                                          
+--------------- ---------------- ------------------- ----------------------------------------------------------------                                                                                   
+              1 db19c            18-03-2021 06:48:07 DESKTOP-04HOUK7                                                                                                                                    
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput,
+  2  to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Filimon Adrian                 334CC      Lab2       12-03-2021 12:12:12 12-03-2021 02:48:03            156                                                                                             
+Filimon Adrian                 334CC      Lab3       18-03-2021 10:13:27 18-03-2021 12:01:56            108                                                                                             
+Filimon Adrian                 334CC      Lab3       18-03-2021 11:25:15 18-03-2021 12:01:56             37                                                                                             
+
+SQL> spool off;
