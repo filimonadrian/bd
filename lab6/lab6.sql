@@ -1,4 +1,12 @@
 
+spool C:\Users\Adrian\Documents\bd\lab6\spool_bd_lab6_9apr2021.lst
+set lines 200
+set pages 100
+select to_char(sysdate, ’dd-mm-yyyy hh:mi:ss’) from dual;
+insert into login_lab_bd values( 'Filimon Adrian', '334CC', 'Lab6', user, sysdate, null, null);
+select * from login_lab_bd;
+
+
 -- returneaza -1
 SELECT SIGN(-12) from dual;
 
@@ -9,7 +17,7 @@ SELECT ABS(-12) from dual;
 SELECT CEIL(14.2) from dual;
 
 -- definire PI
-DEFINE pi = '(select asin(1) * 2 from dual)'
+DEFINE pi = '(select asin(1) * 2 from dual)';
 
 -- returneaza 0.5
 SELECT SIN(30 * &pi / 180) sin from dual;
@@ -129,9 +137,9 @@ select NEXT_DAY('24-MAR-2014', 'MONDAY') urmatoarea_luni
     from dual;
 
 
-select nume, data_ang
+select nume, data_ang,
     MONTHS_BETWEEN('01-JAN-2014', data_ang) luni_vechime1,
-    MONTHS_BETWEEN(data_ang, '01-JAN-2014') luni_vechime2,
+    MONTHS_BETWEEN(data_ang, '01-JAN-2014') luni_vechime2
 from angajati
 where id_dep = 10;
 
@@ -198,3 +206,61 @@ select sysdate form dual;
 -- in DAY MONTH YEAR
 ALTER SESSION SET NLS_DATE_FORMAT = 'DD-MONTH-YYYY';
 select replace(sysdate, ' ' , '') from dual;
+
+-- exercitiu individual ocw
+-- Pentru angajatii ce au numele de lungime 4, faceti o lista cu:
+
+-- - numele angajatului scris cu litere mari
+-- - ziua in care s-au angajat
+-- - denumirea departamentului in care lucreaza scrisa cu litere mici
+-- - initiala numelui sefului
+
+select
+    UPPER(a1.nume) || '  ' ||
+    EXTRACT(DAY from a1.data_ang) || ' ' ||
+    LOWER(d.den_dep) || '   ' ||
+    SUBSTR(a2.nume, 0, 1)
+from angajati a1
+    INNER JOIN angajati a2
+            ON a1.id_sef = a2.id_ang
+    INNER JOIN departamente d
+            ON a1.id_dep = d.id_dep
+where LENGTH(a1.nume) = 4;
+
+
+
+-- tema de laborator
+-- identific a doua litera
+-- sterg toate aparitiile
+-- fac diferenta de lungimi si aflu cate am sters
+
+select
+    nume || '    ' || 
+    functie, 
+    SUBSTR(functie, 2, 1) AS LITERA, 
+    LENGTH(functie) - LENGTH(REPLACE(functie, SUBSTR(functie, 2, 1), '')) AS NR_APARITII
+from angajati;
+
+
+
+-- ex2
+
+select
+    id_dep,
+    nume,
+    data_ang,
+    NEXT_DAY((ADD_MONTHS(data_ang, 3)) - 1, 'FRIDAY') AS Data_evaluare,
+    EXTRACT(DAY FROM NEXT_DAY((ADD_MONTHS(data_ang, 3)) - 1, 'FRIDAY')) AS ziua
+from angajati
+WHERE functie <> 'PRESIDENT';
+
+
+
+update login_lab_bd set data_sf= sysdate where laborator='Lab6';
+update login_lab_bd set durata= round((data_sf-data_in)*24*60) where laborator='Lab6';
+commit;
+select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss’), host_name
+from v$instance;
+select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput,
+to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+spool off; 
