@@ -1,0 +1,1431 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+16-04-2021 09:52:31                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values( 'Filimon Adrian', '334CC', 'Lab7', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Filimon Adrian                 334CC      Lab5       SCOTT      01-APR-21 01-APR-21        106                                                                                                          
+Filimon Adrian                 334CC      Lab7       SCOTT      16-APR-21                                                                                                                               
+Filimon Adrian                 334CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        156                                                                                                          
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21 18-MAR-21        108                                                                                                          
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21 18-MAR-21         37                                                                                                          
+Filimon Adrian                 334CC      Lab4       SCOTT      26-MAR-21 26-MAR-21        127                                                                                                          
+Filimon Adrian                 334CC      Lab6       SCOTT      09-APR-21 09-APR-21         72                                                                                                          
+
+7 rows selected.
+
+SQL> select to_char(sysdate, 'DD-MM-YYYY') data_curenta
+  2  from dual;
+
+DATA_CUREN                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+16-04-2021                                                                                                                                                                                              
+
+SQL> select to_date('15112006', 'DD-MM-YYYY') data_ex
+  2  from dual;
+
+DATA_EX                                                                                                                                                                                                 
+---------                                                                                                                                                                                               
+15-NOV-06                                                                                                                                                                                               
+
+SQL> select to_char(-10000, '$999999.99MI') valoare
+  2  from dual;
+
+VALOARE                                                                                                                                                                                                 
+-----------                                                                                                                                                                                             
+ $10000.00-                                                                                                                                                                                             
+
+SQL> select to_char('$10000.00-', '$999999.99MI') valoare
+  2  from dual;
+select to_char('$10000.00-', '$999999.99MI') valoare
+               *
+ERROR at line 1:
+ORA-01722: invalid number 
+
+
+SQL> select to_char('$10000.00-', '$999999.99MI') valoare
+  2  from dual;
+select to_char('$10000.00-', '$999999.99MI') valoare
+               *
+ERROR at line 1:
+ORA-01722: invalid number 
+
+
+SQL> from dual;
+SP2-0042: unknown command "from dual" - rest of line ignored.
+SQL> select to_number('$10000.00-', '$999999.99MI') valoare
+  2  from dual;
+
+   VALOARE                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+    -10000                                                                                                                                                                                              
+
+SQL> SELECT
+  2      nume,
+  3      to_char(data_ang, 'dd-mm-yyyy') data_ang
+  4  FROM angajati
+  5  WHERE to_char(data_ang, 'YYYY') like '1982';
+
+NUME                           DATA_ANG                                                                                                                                                                 
+------------------------------ ----------                                                                                                                                                               
+MILLER                         23-01-1982                                                                                                                                                               
+
+SQL> SELECT
+  2      nume,
+  3      to_char(data_ang, 'dd-mm-yyyy') data_ang
+  4  FROM angajati
+  5  WHERE
+  6      to_date(to_char(data_ang, 'YYYY'), 'YYYY') =
+  7      to_date(to_char(1982), 'YYYY');
+
+NUME                           DATA_ANG                                                                                                                                                                 
+------------------------------ ----------                                                                                                                                                               
+MILLER                         23-01-1982                                                                                                                                                               
+
+SQL> SELECT
+  2      nume,
+  3      to_char(data_ang, 'dd-mm-yyyy') data_ang
+  4  FROM angajati
+  5  WHERE to_number (to_char (data_ang, 'YYYY')) = 1982;
+
+NUME                           DATA_ANG                                                                                                                                                                 
+------------------------------ ----------                                                                                                                                                               
+MILLER                         23-01-1982                                                                                                                                                               
+
+SQL> SELECT
+  2      nume,
+  3      to_char(data_ang, 'dd-mm-yyyy') data_ang
+  4  FROM angajati
+  5  WHERE
+  6      to_date(to_char(data_ang, 'YYYY'), 'YYYY') =
+  7      to_date(to_char(1982), 'YYYY');
+
+NUME                           DATA_ANG                                                                                                                                                                 
+------------------------------ ----------                                                                                                                                                               
+MILLER                         23-01-1982                                                                                                                                                               
+
+SQL> column numar format 99999
+SQL> select 123.14 numar from dual;
+
+ NUMAR                                                                                                                                                                                                  
+------                                                                                                                                                                                                  
+   123                                                                                                                                                                                                  
+
+SQL> column numar format 999.99
+SQL> select 123.14 numar from dual;
+
+  NUMAR                                                                                                                                                                                                 
+-------                                                                                                                                                                                                 
+ 123.14                                                                                                                                                                                                 
+
+SQL> column numar format $999.99
+SQL> select 123.13.numar from dual;
+select 123.13.numar from dual
+             *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> column numar format $999.99
+SQL> select 123.13 numar from dual;
+
+   NUMAR                                                                                                                                                                                                
+--------                                                                                                                                                                                                
+ $123.13                                                                                                                                                                                                
+
+SQL> column numar format 00999.99
+SQL> select 123.14 numar from dual;
+
+    NUMAR                                                                                                                                                                                               
+---------                                                                                                                                                                                               
+ 00123.14                                                                                                                                                                                               
+
+SQL> select 0.14 numar from dual;
+
+    NUMAR                                                                                                                                                                                               
+---------                                                                                                                                                                                               
+ 00000.14                                                                                                                                                                                               
+
+SQL> column numar format 9990.99
+SQL> select 123.14 numar format from dual;
+select 123.14 numar format from dual
+                    *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select 0.14 numar from dual;
+
+   NUMAR                                                                                                                                                                                                
+--------                                                                                                                                                                                                
+    0.14                                                                                                                                                                                                
+
+SQL> column numar format 9990.99
+SQL> select 123.14 numar format from dual;
+select 123.14 numar format from dual
+                    *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select 0.14 numar from dual;
+
+   NUMAR                                                                                                                                                                                                
+--------                                                                                                                                                                                                
+    0.14                                                                                                                                                                                                
+
+SQL> column numar format 09990.99
+SQL> select 123.14 numar from dual;
+
+    NUMAR                                                                                                                                                                                               
+---------                                                                                                                                                                                               
+ 00123.14                                                                                                                                                                                               
+
+SQL> select 0.14 numar from dual;
+
+    NUMAR                                                                                                                                                                                               
+---------                                                                                                                                                                                               
+ 00000.14                                                                                                                                                                                               
+
+SQL> column numar format 999,999,999.99
+SQL> select 123123123.14 numar from dual;
+
+          NUMAR                                                                                                                                                                                         
+---------------                                                                                                                                                                                         
+ 123,123,123.14                                                                                                                                                                                         
+
+SQL> column numar format 999.99MI
+SQL> select -123.14 numar from dual;
+
+  NUMAR                                                                                                                                                                                                 
+-------                                                                                                                                                                                                 
+123.14-                                                                                                                                                                                                 
+
+SQL> column numar format 999.99PR
+SQL> select -123.14 numar from dual;
+
+   NUMAR                                                                                                                                                                                                
+--------                                                                                                                                                                                                
+<123.14>                                                                                                                                                                                                
+
+SQL> select 123.14 numar from dual;
+
+   NUMAR                                                                                                                                                                                                
+--------                                                                                                                                                                                                
+ 123.14                                                                                                                                                                                                 
+
+SQL> column numar format 999.99EEEE
+SQL> select 123.14 numar from dual;
+
+     NUMAR                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+  1.23E+02                                                                                                                                                                                              
+
+SQL> column numar format B99999.99
+SQL> select 123 numar from dual;
+
+    NUMAR                                                                                                                                                                                               
+---------                                                                                                                                                                                               
+   123.00                                                                                                                                                                                               
+
+SQL> column numar format 99999D00
+SQL> select 0.14 numar from dual;
+
+    NUMAR                                                                                                                                                                                               
+---------                                                                                                                                                                                               
+      .14                                                                                                                                                                                               
+
+SQL> select 123.1 numar from dual;
+
+    NUMAR                                                                                                                                                                                               
+---------                                                                                                                                                                                               
+   123.10                                                                                                                                                                                               
+
+SQL> select greatest (23, 12, 34, 77, 89, 52) greatest gr
+  2  from dual;
+select greatest (23, 12, 34, 77, 89, 52) greatest gr
+                                                  *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select greatest (23, 12, 34, 77, 89, 52) gr
+  2  from dual;
+
+        GR                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+        89                                                                                                                                                                                              
+
+SQL> select least (23, 12, 34, 77, 89, 52) lst
+  2  from dual;
+
+       LST                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+        12                                                                                                                                                                                              
+
+SQL> select greatest ('15-JAN-1985', '23-AUG-2001') gr
+  2  from dual;
+
+GR                                                                                                                                                                                                      
+-----------                                                                                                                                                                                             
+23-AUG-2001                                                                                                                                                                                             
+
+SQL> select least ('15-JAN-1985', '23-AUG-2001') lst
+  2  from dual;
+
+LST                                                                                                                                                                                                     
+-----------                                                                                                                                                                                             
+15-JAN-1985                                                                                                                                                                                             
+
+SQL> SELECT
+  2      nume,
+  3      functie,
+  4      salariu,
+  5      decode (functie, 'MANAGER', salariu * 1.25,
+  6                          'ANALYST', salariu * 1.24,
+  7                          salariu / 4) prima
+  8  FROM angajati
+  9  where id_dep = 20
+ 10  order by functie;
+
+NUME                           FUNCTIE                 SALARIU      PRIMA                                                                                                                               
+------------------------------ -------------------- ---------- ----------                                                                                                                               
+SCOTT                          ANALYST                    3000       3720                                                                                                                               
+FORD                           ANALYST                    3000       3720                                                                                                                               
+ADAMS                          CLERK                      1100        275                                                                                                                               
+SMITH                          CLERK                       800        200                                                                                                                               
+JONES                          MANAGER                    2975    3718.75                                                                                                                               
+
+SQL> SELECT
+  2      nume,
+  3      functie,
+  4      salariu,
+  5      to_char (data_ang, 'YYYY') an_ang
+  6      decode (sign (data_ang - to_date('1 JAN 1982')),
+  7          -1, salariu * 1.25,
+  8          salariu * 1.10) prima
+  9  from angajati
+ 10  where id_dep = 20;
+    decode (sign (data_ang - to_date('1 JAN 1982')),
+    *
+ERROR at line 6:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> order by functie;
+SP2-0734: unknown command beginning "order by f..." - rest of line ignored.
+SQL> SELECT
+  2      nume,
+  3      functie,
+  4      salariu,
+  5      to_char (data_ang, 'YYYY') an_ang
+  6      decode (sign (data_ang - to_date('1 JAN 1982')),
+  7          -1, salariu * 1.25,
+  8          salariu * 1.10) prima
+  9  from angajati
+ 10  where id_dep = 20
+ 11  order by functie;
+    decode (sign (data_ang - to_date('1 JAN 1982')),
+    *
+ERROR at line 6:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> SELECT
+  2      nume,
+  3      functie,
+  4      salariu,
+  5      to_char (data_ang, 'YYYY') an_ang
+  6      decode (sign (data_ang - to_date('1-JAN-1982')),
+  7          -1, salariu * 1.25,
+  8          salariu * 1.10) prima
+  9  from angajati
+ 10  where id_dep = 20
+ 11  order by functie;
+    decode (sign (data_ang - to_date('1-JAN-1982')),
+    *
+ERROR at line 6:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> SELECT
+  2      nume,
+  3      functie,
+  4      salariu,
+  5      to_char (data_ang, 'YYYY') an_ang
+  6      decode (sign (data_ang - to_date('1-JAN-1982')),
+  7          -1, salariu * 1.25,
+  8          salariu * 1.10) prima
+  9  from angajati
+ 10  where id_dep = 20
+ 11  order by functie;
+    decode (sign (data_ang - to_date('1-JAN-1982')),
+    *
+ERROR at line 6:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select
+  2      case lower (locatie)
+  3          when 'new-york' then 1
+  4          when 'dallas' then 2
+  5          when 'chicago' then 3
+  6          when 'boston' then 4
+  7      end cod_dep
+  8  from departamente;
+    case lower (locatie)
+                *
+ERROR at line 2:
+ORA-00904: "LOCATIE": invalid identifier 
+
+
+SQL> select * from departamente;
+
+    ID_DEP DEN_DEP                        SEDIU                                                                                                                                                         
+---------- ------------------------------ --------------------                                                                                                                                          
+        10 ACCOUNTING                     NEW YORK                                                                                                                                                      
+        20 RESEARCH                       DALLAS                                                                                                                                                        
+        30 SALES                          CHICAGO                                                                                                                                                       
+        40 OPERATIONS                     BOSTON                                                                                                                                                        
+
+SQL> select
+  2      case lower (sediu)
+  3          when 'new-york' then 1
+  4          when 'dallas' then 2
+  5          when 'chicago' then 3
+  6          when 'boston' then 4
+  7      end cod_dep
+  8  from departamente;
+
+   COD_DEP                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+                                                                                                                                                                                                        
+         2                                                                                                                                                                                              
+         3                                                                                                                                                                                              
+         4                                                                                                                                                                                              
+
+SQL> SELECT
+  2      case
+  3          when lower(sediu) = 'nwe york' then 1
+  4          when id_dep = 20
+  5              or lower(sediu) = 'dallas' then 2
+  6          when lower(sediu) = 'chicago' then 3
+  7          when id_dep = 40 then 4
+  8          else 5
+  9      end cod_dep
+ 10  from departamente;
+
+   COD_DEP                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+         5                                                                                                                                                                                              
+         2                                                                                                                                                                                              
+         3                                                                                                                                                                                              
+         4                                                                                                                                                                                              
+
+SQL> select nume
+  2  from angajati
+  3  where
+  4      id_ang = (case functie
+  5          when 'SALESMAN' then 7844
+  6          when 'CLERK' then 7900
+  7          when 'ANALYST' then 7902
+  8          else 7839
+  9      end);
+
+NUME                                                                                                                                                                                                    
+------------------------------                                                                                                                                                                          
+KING                                                                                                                                                                                                    
+TURNER                                                                                                                                                                                                  
+JAMES                                                                                                                                                                                                   
+FORD                                                                                                                                                                                                    
+
+SQL> select nume
+  2  from angajati
+  3  where id_ang = (case
+  4          when functie = 'SALESMAN' then 7844
+  5          when functie = 'CLERK' then 7900
+  6          when functie = 'ANALYST' then 7902
+  7          else 7839
+  8      end);
+
+NUME                                                                                                                                                                                                    
+------------------------------                                                                                                                                                                          
+KING                                                                                                                                                                                                    
+TURNER                                                                                                                                                                                                  
+JAMES                                                                                                                                                                                                   
+FORD                                                                                                                                                                                                    
+
+SQL> set null NULL
+SQL> select
+  2      nume,
+  3      comision
+  4      nvl(comision, 0) nvl_com,
+  5      salariu + comision "Sal + COM",
+  6      salariu + +nvl(comision, 0) "sal + nvl_com"
+  7  from angajati
+  8  where id_dep = 30l
+  9  set null ''
+ 10  ;
+    nvl(comision, 0) nvl_com,
+       *
+ERROR at line 4:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> set null NULL
+SQL> select
+  2      nume,
+  3      comision
+  4      nvl(comision, 0) nvl_com,
+  5      salariu + comision "Sal + COM",
+  6      salariu + +nvl(comision, 0) "sal + nvl_com"
+  7  from angajati
+  8  where id_dep = 30;
+    nvl(comision, 0) nvl_com,
+       *
+ERROR at line 4:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> set null ''
+SQL> set null NULL
+SQL> select
+  2      nume,
+  3      comision
+  4      nvl(comision, 0) nvl_com,
+  5      salariu + comision "Sal + COM",
+  6      salariu + nvl(comision, 0) "sal + nvl_com"
+  7  from angajati
+  8  where id_dep = 30;
+    nvl(comision, 0) nvl_com,
+       *
+ERROR at line 4:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> set null ''
+SQL> 
+SQL> select avg (salariu) salariu from angajati;
+
+   SALARIU                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+      2758                                                                                                                                                                                              
+
+SQL> select avg (all salariu) salariu from angajati;
+
+   SALARIU                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+      2758                                                                                                                                                                                              
+
+SQL> select avg (distinct salariu) salariu from angajati;
+
+   SALARIU                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+2855.38462                                                                                                                                                                                              
+
+SQL> select id_dep, avg(salariu)
+  2  from angajati
+  3  group by id_dep
+  4  order by 1;
+
+    ID_DEP AVG(SALARIU)                                                                                                                                                                                 
+---------- ------------                                                                                                                                                                                 
+        10   2916.66667                                                                                                                                                                                 
+        20         2175                                                                                                                                                                                 
+        30   1566.66667                                                                                                                                                                                 
+                  12345                                                                                                                                                                                 
+
+SQL> select
+  2      id_dep,
+  3      avg(salariu + nvl(comision, 0))
+  4  from angajati
+  5  group by id_dep
+  6  having avg (salariu + nvl(comision, 0)) > 2000;
+
+    ID_DEP AVG(SALARIU+NVL(COMISION,0))                                                                                                                                                                 
+---------- ----------------------------                                                                                                                                                                 
+        10                   2916.66667                                                                                                                                                                 
+                                  12345                                                                                                                                                                 
+        20                         2175                                                                                                                                                                 
+
+SQL> select
+  2      id_dep,
+  3      count(*) nr_ang,
+  4      count(all salariu) count_all,
+  5      count (distinct salariu) count_disctinct
+  6  from angajati
+  7  group by id_dep
+  8  order by 1;
+
+    ID_DEP     NR_ANG  COUNT_ALL COUNT_DISCTINCT                                                                                                                                                        
+---------- ---------- ---------- ---------------                                                                                                                                                        
+        10          3          3               3                                                                                                                                                        
+        20          5          5               4                                                                                                                                                        
+        30          6          6               5                                                                                                                                                        
+                    1          1               1                                                                                                                                                        
+
+SQL> select
+  2      id_dep,
+  3      count(functie) count,
+  4      count(distinct functie) count_disctinct
+  5  from angajati
+  6  group by id_dep
+  7  having count (distinct functie) >= 2
+  8  order by 1;
+
+    ID_DEP      COUNT COUNT_DISCTINCT                                                                                                                                                                   
+---------- ---------- ---------------                                                                                                                                                                   
+        10          3               3                                                                                                                                                                   
+        20          5               3                                                                                                                                                                   
+        30          6               3                                                                                                                                                                   
+
+SQL> select
+  2      d.den_dep,
+  3      min(a.salariu) sal_min,
+  4      min(distinct a.salariu) sal_min_d,
+  5      max(a.salariu) sal_max,
+  6      max(distinct a.salariu) sal_max_d,
+  7      sum(a.salariu) sal_sum,
+  8      sum(distinct a.salariu) sal_sum_d
+  9  from angajati a natural join departamente d
+ 10  group by d.den_dep
+ 11  order by d.den_dep;
+
+DEN_DEP                           SAL_MIN  SAL_MIN_D    SAL_MAX  SAL_MAX_D    SAL_SUM  SAL_SUM_D                                                                                                        
+------------------------------ ---------- ---------- ---------- ---------- ---------- ----------                                                                                                        
+ACCOUNTING                           1300       1300       5000       5000       8750       8750                                                                                                        
+RESEARCH                              800        800       3000       3000      10875       7875                                                                                                        
+SALES                                 950        950       2850       2850       9400       8150                                                                                                        
+
+SQL> select
+  2      id_dep,
+  3      variance(salariu) sal_varstd,
+  4      variance (distinct salariu) sal_varstd_d,
+  5      stddev(salariu) sal_devstd,
+  6      stddev(distinct salariu) sal_devstd_d,
+  7      stddev(comision) com_devstd
+  8  from angajati
+  9  group by id_dep
+ 10  order by 1;
+
+    ID_DEP SAL_VARSTD SAL_VARSTD_D SAL_DEVSTD SAL_DEVSTD_D COM_DEVSTD                                                                                                                                   
+---------- ---------- ------------ ---------- ------------ ----------                                                                                                                                   
+        10 3585833.33   3585833.33 1893.62967   1893.62967                                                                                                                                              
+        20    1261875   1398906.25  1123.3321   1182.75367                                                                                                                                              
+        30 446666.667       528250 668.331255    726.80809 602.771377                                                                                                                                   
+                    0            0          0            0                                                                                                                                              
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+      1111 IONESCU                        CLERK                                          12345                                                                                                          
+
+15 rows selected.
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+      1111 IONESCU                        CLERK                                          12345                                                                                                          
+
+15 rows selected.
+
+SQL> select * from departamente;
+
+    ID_DEP DEN_DEP                        SEDIU                                                                                                                                                         
+---------- ------------------------------ --------------------                                                                                                                                          
+        10 ACCOUNTING                     NEW YORK                                                                                                                                                      
+        20 RESEARCH                       DALLAS                                                                                                                                                        
+        30 SALES                          CHICAGO                                                                                                                                                       
+        40 OPERATIONS                     BOSTON                                                                                                                                                        
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      select avg (all salariu) salariu from angajati; sal_med_comp,
+  6      sal + 20/100 * sal AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente;
+    select avg (all salariu) salariu from angajati; sal_med_comp,
+    *
+ERROR at line 5:
+ORA-00936: missing expression 
+
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      sal + 20/100 * sal AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente;
+    sal + 20/100 * sal AS "BONUS"
+                   *
+ERROR at line 6:
+ORA-00904: "SAL": invalid identifier 
+
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente;
+
+DEN_DEP                        NUME                              SALARIU sal_med_comp      BONUS                                                                                                        
+------------------------------ ------------------------------ ---------- ------------ ----------                                                                                                        
+RESEARCH                       SMITH                                 800         2758        160                                                                                                        
+SALES                          ALLEN                                1600         2758        320                                                                                                        
+SALES                          WARD                                 1250         2758        250                                                                                                        
+RESEARCH                       JONES                                2975         2758        595                                                                                                        
+SALES                          MARTIN                               1250         2758        250                                                                                                        
+SALES                          BLAKE                                2850         2758        570                                                                                                        
+ACCOUNTING                     CLARK                                2450         2758        490                                                                                                        
+RESEARCH                       SCOTT                                3000         2758        600                                                                                                        
+ACCOUNTING                     KING                                 5000         2758       1000                                                                                                        
+SALES                          TURNER                               1500         2758        300                                                                                                        
+RESEARCH                       ADAMS                                1100         2758        220                                                                                                        
+SALES                          JAMES                                 950         2758        190                                                                                                        
+RESEARCH                       FORD                                 3000         2758        600                                                                                                        
+ACCOUNTING                     MILLER                               1300         2758        260                                                                                                        
+
+14 rows selected.
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente
+ 10  WHERE
+ 11      salariu > (select avg (all salariu) salariu from angajati);
+
+DEN_DEP                        NUME                              SALARIU sal_med_comp      BONUS                                                                                                        
+------------------------------ ------------------------------ ---------- ------------ ----------                                                                                                        
+ACCOUNTING                     KING                                 5000         2758       1000                                                                                                        
+RESEARCH                       JONES                                2975         2758        595                                                                                                        
+RESEARCH                       SCOTT                                3000         2758        600                                                                                                        
+RESEARCH                       FORD                                 3000         2758        600                                                                                                        
+SALES                          BLAKE                                2850         2758        570                                                                                                        
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente
+ 10  WHERE
+ 11      salariu > (select avg (all salariu) salariu from angajati) AND
+ 12      fucntie <> 'PRESIDENT' AND
+ 13      functie <> 'MANAGER';
+    fucntie <> 'PRESIDENT' AND
+    *
+ERROR at line 12:
+ORA-00904: "FUCNTIE": invalid identifier 
+
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente
+ 10  WHERE
+ 11      salariu > (select avg (all salariu) salariu from angajati) AND
+ 12      functie <> 'PRESIDENT' AND
+ 13      functie <> 'MANAGER';
+
+DEN_DEP                        NUME                              SALARIU sal_med_comp      BONUS                                                                                                        
+------------------------------ ------------------------------ ---------- ------------ ----------                                                                                                        
+RESEARCH                       SCOTT                                3000         2758        600                                                                                                        
+RESEARCH                       FORD                                 3000         2758        600                                                                                                        
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente
+ 10  WHERE
+ 11      salariu > (select avg (all salariu) salariu from angajati) AND
+ 12      functie <> 'PRESIDENT' AND
+ 13      functie <> 'MANAGER'
+ 14  UNION
+ 15  SELECT
+ 16      den_dep,
+ 17      nume,
+ 18      salariu,
+ 19      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+ 20      10/100 * salariu AS "BONUS"
+ 21  FROM
+ 22      angajati
+ 23      NATURAL JOIN departamente
+ 24  WHERE
+ 25      salariu <= (select avg (all salariu) salariu from angajati) AND
+ 26      functie <> 'PRESIDENT' AND
+ 27      functie <> 'MANAGER';
+
+DEN_DEP                        NUME                              SALARIU sal_med_comp      BONUS                                                                                                        
+------------------------------ ------------------------------ ---------- ------------ ----------                                                                                                        
+ACCOUNTING                     MILLER                               1300         2758        130                                                                                                        
+RESEARCH                       ADAMS                                1100         2758        110                                                                                                        
+RESEARCH                       FORD                                 3000         2758        600                                                                                                        
+RESEARCH                       SCOTT                                3000         2758        600                                                                                                        
+RESEARCH                       SMITH                                 800         2758         80                                                                                                        
+SALES                          ALLEN                                1600         2758        160                                                                                                        
+SALES                          JAMES                                 950         2758         95                                                                                                        
+SALES                          MARTIN                               1250         2758        125                                                                                                        
+SALES                          TURNER                               1500         2758        150                                                                                                        
+SALES                          WARD                                 1250         2758        125                                                                                                        
+
+10 rows selected.
+
+SQL> select
+  2      id_dep,
+  3      avg(salariu + nvl(comision, 0))
+  4  from angajati
+  5  group by id_dep
+  6  having avg (salariu + nvl(comision, 0)) > 2000;
+
+    ID_DEP AVG(SALARIU+NVL(COMISION,0))                                                                                                                                                                 
+---------- ----------------------------                                                                                                                                                                 
+        10                   2916.66667                                                                                                                                                                 
+                                  12345                                                                                                                                                                 
+        20                         2175                                                                                                                                                                 
+
+SQL> 
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+      1111 IONESCU                        CLERK                                          12345                                                                                                          
+
+15 rows selected.
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente
+ 10  WHERE
+ 11      salariu + nvl(comision, 0) > (select avg (all salariu) salariu from angajati) AND
+ 12      functie <> 'PRESIDENT' AND
+ 13      functie <> 'MANAGER'
+ 14  UNION
+ 15  SELECT
+ 16      den_dep,
+ 17      nume,
+ 18      salariu,
+ 19      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+ 20      10/100 * salariu AS "BONUS"
+ 21  FROM
+ 22      angajati
+ 23      NATURAL JOIN departamente
+ 24  WHERE
+ 25      salariu + nvl(comision, 0) <= (select avg (all salariu) salariu from angajati) AND
+ 26      functie <> 'PRESIDENT' AND
+ 27      functie <> 'MANAGER';
+
+DEN_DEP                        NUME                              SALARIU sal_med_comp      BONUS                                                                                                        
+------------------------------ ------------------------------ ---------- ------------ ----------                                                                                                        
+ACCOUNTING                     MILLER                               1300         2758        130                                                                                                        
+RESEARCH                       ADAMS                                1100         2758        110                                                                                                        
+RESEARCH                       FORD                                 3000         2758        600                                                                                                        
+RESEARCH                       SCOTT                                3000         2758        600                                                                                                        
+RESEARCH                       SMITH                                 800         2758         80                                                                                                        
+SALES                          ALLEN                                1600         2758        160                                                                                                        
+SALES                          JAMES                                 950         2758         95                                                                                                        
+SALES                          MARTIN                               1250         2758        125                                                                                                        
+SALES                          TURNER                               1500         2758        150                                                                                                        
+SALES                          WARD                                 1250         2758        125                                                                                                        
+
+10 rows selected.
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente
+ 10  group by id_ang
+ 11  having
+ 12      (select avg (all salariu) salariu from angajati) < salariu + nvl(comision, 0) AND
+ 13      functie <> 'PRESIDENT' AND
+ 14      functie <> 'MANAGER'
+ 15  UNION
+ 16  SELECT
+ 17      den_dep,
+ 18      nume,
+ 19      salariu,
+ 20      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+ 21      10/100 * salariu AS "BONUS"
+ 22  FROM
+ 23      angajati
+ 24      NATURAL JOIN departamente
+ 25  group by id_ang
+ 26  having
+ 27      (select avg (all salariu) salariu from angajati) < salariu + nvl(comision, 0) AND
+ 28      functie <> 'PRESIDENT' AND
+ 29      functie <> 'MANAGER';
+    functie <> 'MANAGER'
+    *
+ERROR at line 14:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente
+ 10  group by id_ang
+ 11  having
+ 12      (select avg (all salariu) salariu from angajati) < salariu + nvl(comision, 0) AND
+ 13      functie <> 'PRESIDENT' AND
+ 14      functie <> 'MANAGER';
+    functie <> 'MANAGER'
+    *
+ERROR at line 14:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente
+ 10  group by id_ang
+ 11  having
+ 12      (select avg (all salariu) salariu from angajati) < salariu + nvl(comision, 0);
+    (select avg (all salariu) salariu from angajati) < salariu + nvl(comision, 0)
+                                                       *
+ERROR at line 12:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu,
+  5      (select avg (all salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * salariu AS "BONUS"
+  7  FROM
+  8      angajati
+  9      NATURAL JOIN departamente
+ 10  group by id_ang;
+    den_dep,
+    *
+ERROR at line 2:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> select
+  2      d.den_dep,
+  3      min(a.salariu) sal_min,
+  4      min(distinct a.salariu) sal_min_d,
+  5      max(a.salariu) sal_max,
+  6      max(distinct a.salariu) sal_max_d,
+  7      sum(a.salariu) sal_sum,
+  8      sum(distinct a.salariu) sal_sum_d
+  9  from angajati a natural join departamente d
+ 10  group by d.den_dep
+ 11  order by d.den_dep;
+
+DEN_DEP                           SAL_MIN  SAL_MIN_D    SAL_MAX  SAL_MAX_D    SAL_SUM  SAL_SUM_D                                                                                                        
+------------------------------ ---------- ---------- ---------- ---------- ---------- ----------                                                                                                        
+ACCOUNTING                           1300       1300       5000       5000       8750       8750                                                                                                        
+RESEARCH                              800        800       3000       3000      10875       7875                                                                                                        
+SALES                                 950        950       2850       2850       9400       8150                                                                                                        
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a.nume,
+  4      a.salariu,
+  5      (select avg (all a.salariu) a.salariu from angajati) AS "sal_med_comp",
+  6      20/100 * a.salariu AS "BONUS"
+  7  FROM
+  8      angajati a
+  9      NATURAL JOIN departamente d
+ 10  group by id_ang;
+    (select avg (all a.salariu) a.salariu from angajati) AS "sal_med_comp",
+                                 *
+ERROR at line 5:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a.nume,
+  4      a.salariu,
+  5      (select avg (all a.salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * a.salariu AS "BONUS"
+  7  FROM
+  8      angajati a
+  9      NATURAL JOIN departamente d
+ 10  group by id_ang;
+    d.den_dep,
+    *
+ERROR at line 2:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a.nume,
+  4      a.salariu,
+  5      (select avg (all a.salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * a.salariu AS "BONUS"
+  7  FROM
+  8      angajati a
+  9      NATURAL JOIN departamente d
+ 10  group by den_sep;
+group by den_sep
+         *
+ERROR at line 10:
+ORA-00904: "DEN_SEP": invalid identifier 
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a.nume,
+  4      a.salariu,
+  5      (select avg (all a.salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * a.salariu AS "BONUS"
+  7  FROM
+  8      angajati a
+  9      NATURAL JOIN departamente d
+ 10  group by den_dep;
+    a.nume,
+    *
+ERROR at line 3:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      -- a.nume,
+  4      -- a.salariu,
+  5      (select avg (all a.salariu) salariu from angajati) AS "sal_med_comp",
+  6      20/100 * a.salariu AS "BONUS"
+  7  FROM
+  8      angajati a
+  9      NATURAL JOIN departamente d
+ 10  group by den_dep;
+    20/100 * a.salariu AS "BONUS"
+             *
+ERROR at line 6:
+ORA-00979: not a GROUP BY expression 
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a.nume,
+  4      a.salariu,
+  5      (select avg (all a.salariu) salariu from angajati) AS "sal_med_comp",
+  6  case
+  7      when a.functie = 'PRESIDENT' or a.functie = 'MANAGER' then 0
+  8      when (select avg (all a.salariu) salariu from angajati) < a.salariu
+  9          then
+ 10              a.salariu * 0.2
+ 11          else
+ 12              a.salariu * 0.1
+ 13      end Bonus
+ 14  FROM
+ 15      angajati a
+ 16      NATURAL JOIN departamente d;
+
+DEN_DEP                        NUME                              SALARIU sal_med_comp      BONUS                                                                                                        
+------------------------------ ------------------------------ ---------- ------------ ----------                                                                                                        
+RESEARCH                       SMITH                                 800          800         80                                                                                                        
+SALES                          ALLEN                                1600         1600        160                                                                                                        
+SALES                          WARD                                 1250         1250        125                                                                                                        
+RESEARCH                       JONES                                2975         2975          0                                                                                                        
+SALES                          MARTIN                               1250         1250        125                                                                                                        
+SALES                          BLAKE                                2850         2850          0                                                                                                        
+ACCOUNTING                     CLARK                                2450         2450          0                                                                                                        
+RESEARCH                       SCOTT                                3000         3000        300                                                                                                        
+ACCOUNTING                     KING                                 5000         5000          0                                                                                                        
+SALES                          TURNER                               1500         1500        150                                                                                                        
+RESEARCH                       ADAMS                                1100         1100        110                                                                                                        
+SALES                          JAMES                                 950          950         95                                                                                                        
+RESEARCH                       FORD                                 3000         3000        300                                                                                                        
+ACCOUNTING                     MILLER                               1300         1300        130                                                                                                        
+
+14 rows selected.
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a.nume,
+  4      a.salariu,
+  5      avg (b.salariu) "Salariu mediu",
+  6      case
+  7      when upper(a.functie) = 'PRESIDENT' or upper(a.functie) = 'MANAGER' then 0
+  8      when a.salariu > avg (b.salariu) then a.salariu * 0.2
+  9          else a.salariu * 0.1
+ 10      end "Bonus"
+ 11  FROM
+ 12      angajati a, angajati b
+ 13      NATURAL JOIN departamente d
+ 14  group d.den_dep, a.nume, a.salariu, a.functie;
+group d.den_dep, a.nume, a.salariu, a.functie
+      *
+ERROR at line 14:
+ORA-00924: missing BY keyword 
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a.nume,
+  4      a.salariu,
+  5      avg (b.salariu) "Salariu mediu",
+  6      case
+  7      when upper(a.functie) = 'PRESIDENT' or upper(a.functie) = 'MANAGER' then 0
+  8      when a.salariu > avg (b.salariu) then a.salariu * 0.2
+  9          else a.salariu * 0.1
+ 10      end "Bonus"
+ 11  FROM
+ 12      angajati a, angajati b
+ 13      NATURAL JOIN departamente d
+ 14  group by d.den_dep, a.nume, a.salariu, a.functie;
+
+DEN_DEP                        NUME                              SALARIU Salariu mediu      Bonus                                                                                                       
+------------------------------ ------------------------------ ---------- ------------- ----------                                                                                                       
+RESEARCH                       ALLEN                                1600          2175        160                                                                                                       
+SALES                          KING                                 5000    1566.66667          0                                                                                                       
+SALES                          IONESCU                             12345    1566.66667       2469                                                                                                       
+ACCOUNTING                     JONES                                2975    2916.66667          0                                                                                                       
+ACCOUNTING                     JAMES                                 950    2916.66667         95                                                                                                       
+RESEARCH                       TURNER                               1500          2175        150                                                                                                       
+RESEARCH                       FORD                                 3000          2175        600                                                                                                       
+SALES                          SCOTT                                3000    1566.66667        600                                                                                                       
+SALES                          JAMES                                 950    1566.66667         95                                                                                                       
+ACCOUNTING                     SMITH                                 800    2916.66667         80                                                                                                       
+ACCOUNTING                     ALLEN                                1600    2916.66667        160                                                                                                       
+RESEARCH                       SCOTT                                3000          2175        600                                                                                                       
+RESEARCH                       JAMES                                 950          2175         95                                                                                                       
+SALES                          SMITH                                 800    1566.66667         80                                                                                                       
+SALES                          JONES                                2975    1566.66667          0                                                                                                       
+ACCOUNTING                     IONESCU                             12345    2916.66667       2469                                                                                                       
+RESEARCH                       SMITH                                 800          2175         80                                                                                                       
+RESEARCH                       WARD                                 1250          2175        125                                                                                                       
+SALES                          ALLEN                                1600    1566.66667        320                                                                                                       
+SALES                          WARD                                 1250    1566.66667        125                                                                                                       
+SALES                          TURNER                               1500    1566.66667        150                                                                                                       
+SALES                          MILLER                               1300    1566.66667        130                                                                                                       
+ACCOUNTING                     ADAMS                                1100    2916.66667        110                                                                                                       
+ACCOUNTING                     FORD                                 3000    2916.66667        600                                                                                                       
+RESEARCH                       IONESCU                             12345          2175       2469                                                                                                       
+SALES                          MARTIN                               1250    1566.66667        125                                                                                                       
+SALES                          ADAMS                                1100    1566.66667        110                                                                                                       
+ACCOUNTING                     MARTIN                               1250    2916.66667        125                                                                                                       
+ACCOUNTING                     BLAKE                                2850    2916.66667          0                                                                                                       
+ACCOUNTING                     CLARK                                2450    2916.66667          0                                                                                                       
+ACCOUNTING                     KING                                 5000    2916.66667          0                                                                                                       
+RESEARCH                       BLAKE                                2850          2175          0                                                                                                       
+RESEARCH                       KING                                 5000          2175          0                                                                                                       
+RESEARCH                       MILLER                               1300          2175        130                                                                                                       
+SALES                          BLAKE                                2850    1566.66667          0                                                                                                       
+SALES                          CLARK                                2450    1566.66667          0                                                                                                       
+SALES                          FORD                                 3000    1566.66667        600                                                                                                       
+RESEARCH                       JONES                                2975          2175          0                                                                                                       
+RESEARCH                       MARTIN                               1250          2175        125                                                                                                       
+RESEARCH                       CLARK                                2450          2175          0                                                                                                       
+RESEARCH                       ADAMS                                1100          2175        110                                                                                                       
+ACCOUNTING                     SCOTT                                3000    2916.66667        600                                                                                                       
+ACCOUNTING                     TURNER                               1500    2916.66667        150                                                                                                       
+ACCOUNTING                     WARD                                 1250    2916.66667        125                                                                                                       
+ACCOUNTING                     MILLER                               1300    2916.66667        130                                                                                                       
+
+45 rows selected.
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a.nume,
+  4      a.salariu,
+  5      avg (b.salariu) "Salariu mediu",
+  6      case
+  7      when upper(a.functie) = 'PRESIDENT' or upper(a.functie) = 'MANAGER' then 0
+  8      when a.salariu > avg (b.salariu) then a.salariu * 0.2
+  9          else a.salariu * 0.1
+ 10      end "Bonus"
+ 11  FROM
+ 12      angajati a, angajati b
+ 13      NATURAL JOIN departamente d
+ 14  group by d.den_dep, a.nume, a.salariu, a.functie
+ 15  order by 1, 2;
+
+DEN_DEP                        NUME                              SALARIU Salariu mediu      Bonus                                                                                                       
+------------------------------ ------------------------------ ---------- ------------- ----------                                                                                                       
+ACCOUNTING                     ADAMS                                1100    2916.66667        110                                                                                                       
+ACCOUNTING                     ALLEN                                1600    2916.66667        160                                                                                                       
+ACCOUNTING                     BLAKE                                2850    2916.66667          0                                                                                                       
+ACCOUNTING                     CLARK                                2450    2916.66667          0                                                                                                       
+ACCOUNTING                     FORD                                 3000    2916.66667        600                                                                                                       
+ACCOUNTING                     IONESCU                             12345    2916.66667       2469                                                                                                       
+ACCOUNTING                     JAMES                                 950    2916.66667         95                                                                                                       
+ACCOUNTING                     JONES                                2975    2916.66667          0                                                                                                       
+ACCOUNTING                     KING                                 5000    2916.66667          0                                                                                                       
+ACCOUNTING                     MARTIN                               1250    2916.66667        125                                                                                                       
+ACCOUNTING                     MILLER                               1300    2916.66667        130                                                                                                       
+ACCOUNTING                     SCOTT                                3000    2916.66667        600                                                                                                       
+ACCOUNTING                     SMITH                                 800    2916.66667         80                                                                                                       
+ACCOUNTING                     TURNER                               1500    2916.66667        150                                                                                                       
+ACCOUNTING                     WARD                                 1250    2916.66667        125                                                                                                       
+RESEARCH                       ADAMS                                1100          2175        110                                                                                                       
+RESEARCH                       ALLEN                                1600          2175        160                                                                                                       
+RESEARCH                       BLAKE                                2850          2175          0                                                                                                       
+RESEARCH                       CLARK                                2450          2175          0                                                                                                       
+RESEARCH                       FORD                                 3000          2175        600                                                                                                       
+RESEARCH                       IONESCU                             12345          2175       2469                                                                                                       
+RESEARCH                       JAMES                                 950          2175         95                                                                                                       
+RESEARCH                       JONES                                2975          2175          0                                                                                                       
+RESEARCH                       KING                                 5000          2175          0                                                                                                       
+RESEARCH                       MARTIN                               1250          2175        125                                                                                                       
+RESEARCH                       MILLER                               1300          2175        130                                                                                                       
+RESEARCH                       SCOTT                                3000          2175        600                                                                                                       
+RESEARCH                       SMITH                                 800          2175         80                                                                                                       
+RESEARCH                       TURNER                               1500          2175        150                                                                                                       
+RESEARCH                       WARD                                 1250          2175        125                                                                                                       
+SALES                          ADAMS                                1100    1566.66667        110                                                                                                       
+SALES                          ALLEN                                1600    1566.66667        320                                                                                                       
+SALES                          BLAKE                                2850    1566.66667          0                                                                                                       
+SALES                          CLARK                                2450    1566.66667          0                                                                                                       
+SALES                          FORD                                 3000    1566.66667        600                                                                                                       
+SALES                          IONESCU                             12345    1566.66667       2469                                                                                                       
+SALES                          JAMES                                 950    1566.66667         95                                                                                                       
+SALES                          JONES                                2975    1566.66667          0                                                                                                       
+SALES                          KING                                 5000    1566.66667          0                                                                                                       
+SALES                          MARTIN                               1250    1566.66667        125                                                                                                       
+SALES                          MILLER                               1300    1566.66667        130                                                                                                       
+SALES                          SCOTT                                3000    1566.66667        600                                                                                                       
+SALES                          SMITH                                 800    1566.66667         80                                                                                                       
+SALES                          TURNER                               1500    1566.66667        150                                                                                                       
+SALES                          WARD                                 1250    1566.66667        125                                                                                                       
+
+45 rows selected.
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a.nume,
+  4      a.salariu,
+  5      avg (b.salariu) "Salariu mediu",
+  6      case
+  7      when upper(a.functie) = 'PRESIDENT' or upper(a.functie) = 'MANAGER' then 0
+  8      when a.salariu > avg (b.salariu) then a.salariu * 0.2
+  9          else a.salariu * 0.1
+ 10      end "Bonus"
+ 11  FROM
+ 12      angajati b, angajati a
+ 13      NATURAL JOIN departamente d
+ 14  group by d.den_dep, a.nume, a.salariu, a.functie
+ 15  order by 1, 2;
+
+DEN_DEP                        NUME                              SALARIU Salariu mediu      Bonus                                                                                                       
+------------------------------ ------------------------------ ---------- ------------- ----------                                                                                                       
+ACCOUNTING                     CLARK                                2450          2758          0                                                                                                       
+ACCOUNTING                     KING                                 5000          2758          0                                                                                                       
+ACCOUNTING                     MILLER                               1300          2758        130                                                                                                       
+RESEARCH                       ADAMS                                1100          2758        110                                                                                                       
+RESEARCH                       FORD                                 3000          2758        600                                                                                                       
+RESEARCH                       JONES                                2975          2758          0                                                                                                       
+RESEARCH                       SCOTT                                3000          2758        600                                                                                                       
+RESEARCH                       SMITH                                 800          2758         80                                                                                                       
+SALES                          ALLEN                                1600          2758        160                                                                                                       
+SALES                          BLAKE                                2850          2758          0                                                                                                       
+SALES                          JAMES                                 950          2758         95                                                                                                       
+SALES                          MARTIN                               1250          2758        125                                                                                                       
+SALES                          TURNER                               1500          2758        150                                                                                                       
+SALES                          WARD                                 1250          2758        125                                                                                                       
+
+14 rows selected.
+
+SQL> select
+  2  den_dep Den_depart,
+  3  nume Nume,
+  4  salariu Salariu,
+  5  (select avg (salariu) salariu from angajati) Sal_med_comp,
+  6  (case
+  7  when functie = 'MANAGER' then 0
+  8  when functie = 'PRESIDENT' then 0
+  9  else (decode (sign (salariu - (select avg (salariu) salariu from angajati)),
+ 10  -1, salariu * 0.1, salariu * 0.2))
+ 11  end) Bonus
+ 12  from angajati natural join departamente;
+
+DEN_DEPART                     NUME                              SALARIU SAL_MED_COMP      BONUS                                                                                                        
+------------------------------ ------------------------------ ---------- ------------ ----------                                                                                                        
+RESEARCH                       SMITH                                 800         2758         80                                                                                                        
+SALES                          ALLEN                                1600         2758        160                                                                                                        
+SALES                          WARD                                 1250         2758        125                                                                                                        
+RESEARCH                       JONES                                2975         2758          0                                                                                                        
+SALES                          MARTIN                               1250         2758        125                                                                                                        
+SALES                          BLAKE                                2850         2758          0                                                                                                        
+ACCOUNTING                     CLARK                                2450         2758          0                                                                                                        
+RESEARCH                       SCOTT                                3000         2758        600                                                                                                        
+ACCOUNTING                     KING                                 5000         2758          0                                                                                                        
+SALES                          TURNER                               1500         2758        150                                                                                                        
+RESEARCH                       ADAMS                                1100         2758        110                                                                                                        
+SALES                          JAMES                                 950         2758         95                                                                                                        
+RESEARCH                       FORD                                 3000         2758        600                                                                                                        
+ACCOUNTING                     MILLER                               1300         2758        130                                                                                                        
+
+14 rows selected.
+
+SQL> selectd.den_dep Den_depart,a.nume Nume,a.salariu Salariu,avg(a1.salariu) Sal_med_comp,(casewhen a.functie = 'MANAGER' then 0when a.functie = 'PRESIDENT' then 0else (decode (sign (a.salariu - avg(a1.salariu)), -1, a.salariu * 0.1, a.salariu * 0.2))end) Bonusfrom angajati a natural join departamente d,angajati a1group by d.den_dep, a.nume, a.salariu, a.functie;
+SP2-0734: unknown command beginning "selectd.de..." - rest of line ignored.
+SQL> select
+  2  d.den_dep Den_depart,
+  3  a.nume Nume,
+  4  a.salariu Salariu,
+  5  avg(a1.salariu) Sal_med_comp,
+  6  (case
+  7  when a.functie = 'MANAGER' then 0
+  8  when a.functie = 'PRESIDENT' then 0
+  9  else (decode (sign (a.salariu - avg(a1.salariu)),
+ 10  -1, a.salariu * 0.1, a.salariu * 0.2))
+ 11  end) Bonus
+ 12  from angajati a natural join departamente d,
+ 13  angajati a1
+ 14  group by d.den_dep, a.nume, a.salariu, a.functie;
+
+DEN_DEPART                     NUME                              SALARIU SAL_MED_COMP      BONUS                                                                                                        
+------------------------------ ------------------------------ ---------- ------------ ----------                                                                                                        
+SALES                          JAMES                                 950         2758         95                                                                                                        
+RESEARCH                       FORD                                 3000         2758        600                                                                                                        
+RESEARCH                       SCOTT                                3000         2758        600                                                                                                        
+RESEARCH                       SMITH                                 800         2758         80                                                                                                        
+SALES                          ALLEN                                1600         2758        160                                                                                                        
+SALES                          WARD                                 1250         2758        125                                                                                                        
+SALES                          TURNER                               1500         2758        150                                                                                                        
+SALES                          MARTIN                               1250         2758        125                                                                                                        
+ACCOUNTING                     CLARK                                2450         2758          0                                                                                                        
+ACCOUNTING                     KING                                 5000         2758          0                                                                                                        
+SALES                          BLAKE                                2850         2758          0                                                                                                        
+RESEARCH                       JONES                                2975         2758          0                                                                                                        
+RESEARCH                       ADAMS                                1100         2758        110                                                                                                        
+ACCOUNTING                     MILLER                               1300         2758        130                                                                                                        
+
+14 rows selected.
+
+SQL> update login_lab_bd set data_sf= sysdate where laborator='Lab7';
+
+1 row updated.
+
+SQL> update login_lab_bd set durata= round((data_sf-data_in)*24*60) where laborator='Lab7';
+
+1 row updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss'), host_name
+  2  from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    TO_CHAR(STARTUP_TIM HOST_NAME                                                                                                                                          
+--------------- ---------------- ------------------- ----------------------------------------------------------------                                                                                   
+              1 db19c            16-04-2021 09:45:31 DESKTOP-04HOUK7                                                                                                                                    
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput,
+  2  to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Filimon Adrian                 334CC      Lab5       01-04-2021 10:34:47 01-04-2021 12:20:40            106                                                                                             
+Filimon Adrian                 334CC      Lab7       16-04-2021 09:52:31 16-04-2021 11:05:36             73                                                                                             
+Filimon Adrian                 334CC      Lab2       12-03-2021 12:12:12 12-03-2021 02:48:03            156                                                                                             
+Filimon Adrian                 334CC      Lab3       18-03-2021 10:13:27 18-03-2021 12:01:56            108                                                                                             
+Filimon Adrian                 334CC      Lab3       18-03-2021 11:25:15 18-03-2021 12:01:56             37                                                                                             
+Filimon Adrian                 334CC      Lab4       26-03-2021 10:23:25 26-03-2021 12:30:51            127                                                                                             
+Filimon Adrian                 334CC      Lab6       09-04-2021 12:33:50 09-04-2021 01:46:02             72                                                                                             
+
+7 rows selected.
+
+SQL> spool off;
