@@ -1,0 +1,1504 @@
+SQL*Plus: Release 19.0.0.0.0 - Production on Fri Apr 23 12:17:07 2021
+Version 19.3.0.0.0
+
+Copyright (c) 1982, 2019, Oracle.  All rights reserved.
+
+Enter user-name: scott
+Enter password:
+Last Successful login time: Sat Apr 17 2021 13:02:25 +03:00
+
+Connected to:
+Oracle Database 19c Enterprise Edition Release 19.0.0.0.0 - Production
+Version 19.3.0.0.0
+
+SQL> spool C:\Users\Adrian\Documents\bd\lab8\spool_bd_lab8_23apr2021.lst
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, ’dd-mm-yyyy hh:mi:ss’) from dual;
+
+TO_CHAR(SYSDATE,'DD
+-------------------
+23-04-2021 12:18:07
+
+SQL> insert into login_lab_bd values( 'Filimon Adrian', '334CC', 'Lab8', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA
+------------------------------ ---------- ---------- ---------- --------- --------- ----------
+Filimon Adrian                 334CC      Lab8       SCOTT      23-APR-21
+Filimon Adrian                 334CC      Lab5       SCOTT      01-APR-21 01-APR-21        106
+Filimon Adrian                 334CC      Lab7       SCOTT      16-APR-21 16-APR-21         73
+Filimon Adrian                 334CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        156
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21 18-MAR-21        108
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21 18-MAR-21         37
+Filimon Adrian                 334CC      Lab4       SCOTT      26-MAR-21 26-MAR-21        127
+Filimon Adrian                 334CC      Lab6       SCOTT      09-APR-21 09-APR-21         72
+
+8 rows selected.
+
+SQL> SELECT
+  2      id_dep,
+  3      nume,
+  4      functie,
+  5      salariu
+  6  FROM angajati
+  7  WHERE
+  8      salariu = (SELECT max(salariu)
+  9                  FROM angajati);
+
+    ID_DEP NUME                           FUNCTIE                 SALARIU
+---------- ------------------------------ -------------------- ----------
+           IONESCU                        CLERK                     12345
+
+SQL> SELECT
+  2      id_dep,
+  3      nume,
+  4      functie,
+  5      salariu
+  6  FROM angajati
+  7  WHERE
+  8      NOT id_dep = 20 AND
+  9      functie IN (SELECT functie
+ 10                  FROM angajati
+ 11                  WHERE id_dep = 20)
+ 12  ORDER BY functie;
+
+    ID_DEP NUME                           FUNCTIE                 SALARIU
+---------- ------------------------------ -------------------- ----------
+        30 JAMES                          CLERK                       950
+        10 MILLER                         CLERK                      1300
+        30 BLAKE                          MANAGER                    2850
+        10 CLARK                          MANAGER                    2450
+
+SQL> SELECT
+  2      nume,
+  3      functie,
+  4      data_ang
+  5  FROM angajati
+  6  WHERE
+  7      data_ang NOT IN (SELECT distinct(data_ang)
+  8                      FROM angajati
+  9                      WHERE to_char(data_ang, 'MON') IN ('DEC', 'JAN', 'FEB'))
+ 10  ORDER BY nume;
+
+NUME                           FUNCTIE              DATA_ANG
+------------------------------ -------------------- ---------
+ADAMS                          CLERK                23-MAY-87
+BLAKE                          MANAGER              01-MAY-81
+CLARK                          MANAGER              09-JUN-81
+JONES                          MANAGER              02-APR-81
+KING                           PRESIDENT            17-NOV-81
+MARTIN                         SALESMAN             28-SEP-81
+SCOTT                          ANALYST              19-APR-87
+TURNER                         SALESMAN             08-SEP-81
+
+8 rows selected.
+
+SQL> SELECT
+  2      den_dep,
+  3      nume,
+  4      salariu
+  5  FROM angajati
+  6      NATURAL JOIN departamente
+  7  WHERE
+  8      salariu IN
+  9      (SELECT max(salariu)
+ 10      FROM angajati
+ 11      GROUP BY id_dep)
+ 12  ORDER BY den_dep;
+
+DEN_DEP                        NUME                              SALARIU
+------------------------------ ------------------------------ ----------
+ACCOUNTING                     KING                                 5000
+RESEARCH                       SCOTT                                3000
+RESEARCH                       FORD                                 3000
+SALES                          BLAKE                                2850
+
+SQL> SELECT
+  2      id_dep,
+  3      nume,
+  4      functie,
+  5      data_ang
+  6  FROM angajati
+  7  WHERE
+  8      (TO_CHAR(data_ang, 'YYYY'), functie) IN
+  9      (SELECT to_char(data_ang, 'YYYY'), functie
+ 10          FROM angajati
+ 11          WHERE LOWER(nume) = 'jones');
+
+    ID_DEP NUME                           FUNCTIE              DATA_ANG
+---------- ------------------------------ -------------------- ---------
+        20 JONES                          MANAGER              02-APR-81
+        30 BLAKE                          MANAGER              01-MAY-81
+        10 CLARK                          MANAGER              09-JUN-81
+
+SQL> SELECT
+  2      id_dep,
+  3      nume,
+  4      salariu
+  5  FROM angajati
+  6  WHERE
+  7      (id_dep, salariu + nvl(comision, 0)) IN
+  8      (SELECT id_dep, min(salariu + nvl(comision, 0))
+  9          FROM angajati
+ 10          GROUP BY id_dep)
+ 11  ORDER BY id_dep;
+
+    ID_DEP NUME                              SALARIU
+---------- ------------------------------ ----------
+        10 MILLER                               1300
+        20 SMITH                                 800
+        30 JAMES                                 950
+
+SQL> SELECT
+  2      nume,
+  3      functie,
+  4      data_ang,
+  5      salariu
+  6  FROM angajati
+  7  WHERE
+  8      salariu >
+  9      (SELECT MAX(salariu)
+ 10          FROM angajati
+ 11          WHERE
+ 12              LOWER(den_dep) = 'sales');
+            LOWER(den_dep) = 'sales')
+                  *
+ERROR at line 12:
+ORA-00904: "DEN_DEP": invalid identifier
+
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10
+      1111 IONESCU                        CLERK                                          12345
+
+15 rows selected.
+
+SQL> SELECT
+  2      nume,
+  3      functie,
+  4      data_ang,
+  5      salariu
+  6  FROM angajati
+  7  WHERE
+  8      salariu >
+  9      (SELECT MAX(salariu)
+ 10          FROM angajati
+ 11          WHERE
+ 12              id_dep = (SELECT id_dep
+ 13                          FROM departamente
+ 14                          WHERE
+ 15                              LOWER(den_dep) = 'sales'));
+
+NUME                           FUNCTIE              DATA_ANG     SALARIU
+------------------------------ -------------------- --------- ----------
+JONES                          MANAGER              02-APR-81       2975
+SCOTT                          ANALYST              19-APR-87       3000
+KING                           PRESIDENT            17-NOV-81       5000
+FORD                           ANALYST              03-DEC-81       3000
+IONESCU                        CLERK                               12345
+
+SQL> SELECT
+  2      a.id_dep,
+  3      a.nume,
+  4      a.functie,
+  5      a.salariu
+  6  FROM angajati a
+  7  WHERE
+  8      a.salariu > (SELECT AVG(b.salariu)
+  9                      FROM angajati b
+ 10                      WHERE b.id_dep = a.id_dep)
+ 11  ORDER BY a.id_dep;
+
+    ID_DEP NUME                           FUNCTIE                 SALARIU
+---------- ------------------------------ -------------------- ----------
+        10 KING                           PRESIDENT                  5000
+        20 JONES                          MANAGER                    2975
+        20 FORD                           ANALYST                    3000
+        20 SCOTT                          ANALYST                    3000
+        30 ALLEN                          SALESMAN                   1600
+        30 BLAKE                          MANAGER                    2850
+
+6 rows selected.
+
+SQL> UPDATE angajati a
+  2  SET
+  3      (a.salariu, a.comision) =
+  4          (SELECT
+  5              a.salariu + avg(b.salariu * 0.1),
+  6              a.comision + avg(b.comision * 0.1)
+  7          FROM angajati b
+  8          WHERE a.id_dep = b.id_dep)
+  9  WHERE
+ 10      data_ang <= '1-JUN-81';
+
+5 rows updated.
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH                          CLERK                      7902 17-DEC-80     1017.5                    20
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81    1756.67        355         30
+      7521 WARD                           SALESMAN                   7698 22-FEB-81    1406.67        555         30
+      7566 JONES                          MANAGER                    7839 02-APR-81     3192.5                    20
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81    3006.67                    30
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10
+      1111 IONESCU                        CLERK                                          12345
+
+15 rows selected.
+
+SQL> SELECT
+  2      b.id_dep,
+  3      a.den_dep,
+  4      b.max_sal_dep
+  5  FROM
+  6      departamente a,
+  7      (SELECT
+  8          id_dep,
+  9          max(salariu) max_sal_dep
+ 10      FROM angajati
+ 11      GROUP BY id_dep) b
+ 12  WHERE a.id_dep = b.id_dep
+ 13  ORDER BY b.id_dep;
+
+    ID_DEP DEN_DEP                        MAX_SAL_DEP
+---------- ------------------------------ -----------
+        10 ACCOUNTING                            5000
+        20 RESEARCH                            3192.5
+        30 SALES                              3006.67
+
+SQL>
+SQL> SELECT
+  2      b.id_dep,
+  3      a.den_dep,
+  4      b.max_sal_dep
+  5  FROM
+  6      departamente a INNER JOIN
+  7          (SELECT
+  8              id_dep,
+  9              max(salariu) max_sal_dep
+ 10          FROM angajati
+ 11          GROUP BY id_dep) b
+ 12      ON a.id_dep = b.id_dep
+ 13
+SQL> ORDER BY b.id_dep;
+SP2-0734: unknown command beginning "ORDER BY b..." - rest of line ignored.
+SQL> SELECT
+  2      b.id_dep,
+  3      a.den_dep,
+  4      b.max_sal_dep
+  5  FROM
+  6      departamente a INNER JOIN
+  7          (SELECT
+  8              id_dep,
+  9              max(salariu) max_sal_dep
+ 10          FROM angajati
+ 11          GROUP BY id_dep) b
+ 12      ON a.id_dep = b.id_dep
+ 13  ;
+
+    ID_DEP DEN_DEP                        MAX_SAL_DEP
+---------- ------------------------------ -----------
+        10 ACCOUNTING                            5000
+        20 RESEARCH                            3192.5
+        30 SALES                              3006.67
+
+SQL> SELECT
+  2      b.id_dep,
+  3      a.den_dep,
+  4      b.max_sal_dep
+  5  FROM
+  6      departamente a INNER JOIN
+  7          (SELECT
+  8              id_dep,
+  9              max(salariu) max_sal_dep
+ 10          FROM angajati
+ 11          GROUP BY id_dep) b
+ 12      ON a.id_dep = b.id_dep
+ 13  ORDER BY id_dep;
+
+    ID_DEP DEN_DEP                        MAX_SAL_DEP
+---------- ------------------------------ -----------
+        10 ACCOUNTING                            5000
+        20 RESEARCH                            3192.5
+        30 SALES                              3006.67
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH                          CLERK                      7902 17-DEC-80     1017.5                    20
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81    1756.67        355         30
+      7521 WARD                           SALESMAN                   7698 22-FEB-81    1406.67        555         30
+      7566 JONES                          MANAGER                    7839 02-APR-81     3192.5                    20
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81    3006.67                    30
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10
+      1111 IONESCU                        CLERK                                          12345
+
+15 rows selected.
+
+SQL> SELECT
+  2      nume,
+  3      den_dep,
+  4      salariu
+  5  FROM
+  6      angajati
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      salariu =
+ 10      (SELECT min(salariu)
+ 11          FROM angajati);
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+JAMES                          SALES                                 950
+
+SQL> select * from deptartamente;
+select * from deptartamente
+              *
+ERROR at line 1:
+ORA-00942: table or view does not exist
+
+
+SQL> select * from departamente;
+
+    ID_DEP DEN_DEP                        SEDIU
+---------- ------------------------------ --------------------
+        10 ACCOUNTING                     NEW YORK
+        20 RESEARCH                       DALLAS
+        30 SALES                          CHICAGO
+        40 OPERATIONS                     BOSTON
+
+SQL> SELECT
+  2      a.nume,
+  3      a.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      salariu =
+ 10      (SELECT min(salariu)
+ 11          FROM angajati b
+ 12          WHERE a.id_dep = b.id_dep);
+    a.den_dep,
+    *
+ERROR at line 3:
+ORA-00904: "A"."DEN_DEP": invalid identifier
+
+
+SQL> SELECT
+  2      a.nume,
+  3      den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      salariu =
+ 10      (SELECT min(salariu)
+ 11          FROM angajati b
+ 12          WHERE a.id_dep = b.id_dep);
+        WHERE a.id_dep = b.id_dep)
+              *
+ERROR at line 12:
+ORA-25155: column used in NATURAL join cannot have qualifier
+
+
+SQL> SELECT
+  2      a.nume,
+  3      den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      salariu =
+ 10      (SELECT min(salariu)
+ 11          FROM angajati b
+ 12          WHERE id_dep = b.id_dep);
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+JAMES                          SALES                                 950
+
+SQL> SELECT
+  2      a.nume,
+  3      den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      salariu IN
+ 10      (SELECT min(salariu)
+ 11          FROM angajati b
+ 12          WHERE id_dep = b.id_dep);
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+JAMES                          SALES                                 950
+
+SQL> SELECT
+  2      nume,
+  3      den_dep,
+  4      salariu
+  5  FROM
+  6      angajati
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      salariu IN
+ 10      (SELECT
+ 11          id_dep,
+ 12          min(salariu)
+ 13      FROM angajati
+ 14      GROUP BY id_dep);
+    (SELECT
+     *
+ERROR at line 10:
+ORA-00913: too many values
+
+
+SQL> SELECT
+  2      nume,
+  3      den_dep,
+  4      salariu
+  5  FROM
+  6      angajati
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      (id_dep, salariu) IN
+ 10      (SELECT
+ 11          id_dep,
+ 12          min(salariu)
+ 13      FROM angajati
+ 14      GROUP BY id_dep);
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+SMITH                          RESEARCH                           1017.5
+JAMES                          SALES                                 950
+MILLER                         ACCOUNTING                           1300
+
+SQL> SELECT
+  2      a.nume,
+  3      a.salariu
+  4  FROM angajati a
+  5  WHERE a.salariu = (
+  6          SELECT min(salariu)
+  7          FROM angajati
+  8          WHERE id_dep = a.id_dep)
+  9  GROUP BY a.id_dep, a.nume, a.salariu;
+
+NUME                              SALARIU
+------------------------------ ----------
+MILLER                               1300
+SMITH                              1017.5
+JAMES                                 950
+
+SQL> SELECT
+  2      a.nume,
+  3      a.salariu
+  4  FROM angajati a
+  5  WHERE a.salariu = (
+  6          SELECT min(salariu)
+  7          FROM angajati
+  8          WHERE id_dep = a.id_dep)
+  9  GROUP BY a.id_dep, a.nume, a.salariu
+ 10  ORDER BY a.nume;
+
+NUME                              SALARIU
+------------------------------ ----------
+JAMES                                 950
+MILLER                               1300
+SMITH                              1017.5
+
+SQL> SELECT
+  2      a.nume,
+  3      den_dep,
+  4      a.salariu
+  5  FROM angajati a
+  6  WHERE a.salariu = (
+  7          SELECT min(salariu)
+  8          FROM angajati
+  9          WHERE id_dep = a.id_dep)
+ 10  GROUP BY a.id_dep, a.nume, a.salariu
+ 11  ORDER BY a.nume;
+    den_dep,
+    *
+ERROR at line 3:
+ORA-00904: "DEN_DEP": invalid identifier
+
+
+SQL> SELECT
+  2      a.nume,
+  3      den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      NATURAL JOIN departamente
+  8  WHERE a.salariu = (
+  9          SELECT min(salariu)
+ 10          FROM angajati
+ 11          WHERE id_dep = a.id_dep)
+ 12  GROUP BY a.id_dep, a.nume, a.salariu
+ 13  ORDER BY a.nume;
+GROUP BY a.id_dep, a.nume, a.salariu
+         *
+ERROR at line 12:
+ORA-25155: column used in NATURAL join cannot have qualifier
+
+
+SQL> SELECT
+  2      a.nume,
+  3      den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      NATURAL JOIN departamente
+  8  WHERE a.salariu = (
+  9          SELECT min(salariu)
+ 10          FROM angajati
+ 11          WHERE id_dep = a.id_dep)
+ 12  GROUP BY id_dep, a.nume, a.salariu
+ 13  ORDER BY a.nume
+ 14  ;
+        WHERE id_dep = a.id_dep)
+                       *
+ERROR at line 11:
+ORA-25155: column used in NATURAL join cannot have qualifier
+
+
+SQL> SELECT
+  2      a.nume,
+  3      den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      NATURAL JOIN departamente
+  8  WHERE a.salariu = (
+  9          SELECT min(salariu)
+ 10          FROM angajati
+ 11          WHERE id_dep = id_dep)
+ 12  GROUP BY id_dep, a.nume, a.salariu
+ 13  ORDER BY a.nume;
+    den_dep,
+    *
+ERROR at line 3:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep;
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+SMITH                          RESEARCH                           1017.5
+ALLEN                          SALES                             1756.67
+WARD                           SALES                             1406.67
+JONES                          RESEARCH                           3192.5
+MARTIN                         SALES                                1250
+BLAKE                          SALES                             3006.67
+CLARK                          ACCOUNTING                           2450
+SCOTT                          RESEARCH                             3000
+KING                           ACCOUNTING                           5000
+TURNER                         SALES                                1500
+ADAMS                          RESEARCH                             1100
+JAMES                          SALES                                 950
+FORD                           RESEARCH                             3000
+MILLER                         ACCOUNTING                           1300
+
+14 rows selected.
+
+SQL> WHERE a.salariu = (
+SP2-0734: unknown command beginning "WHERE a.sa..." - rest of line ignored.
+SQL>         SELECT min(salariu)
+  2          FROM angajati
+  3          WHERE id_dep = a.id_dep)
+  4  GROUP BY id_dep, a.nume, a.salariu
+  5  ORDER BY a.nume;
+        WHERE id_dep = a.id_dep)
+                               *
+ERROR at line 3:
+ORA-00933: SQL command not properly ended
+
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep
+  9  WHERE a.salariu = (
+ 10          SELECT min(salariu)
+ 11          FROM angajati
+ 12          WHERE id_dep = a.id_dep)
+ 13  GROUP BY id_dep, a.nume, a.salariu
+ 14  ORDER BY a.nume;
+GROUP BY id_dep, a.nume, a.salariu
+         *
+ERROR at line 13:
+ORA-00918: column ambiguously defined
+
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep
+  9  WHERE a.salariu = (
+ 10          SELECT min(salariu)
+ 11          FROM angajati
+ 12          WHERE id_dep = a.id_dep)
+ 13  GROUP BY a.id_dep, a.nume, a.salariu
+ 14  ORDER BY a.nume;
+    d.den_dep,
+    *
+ERROR at line 3:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> SELECT
+  2      a.nume,
+  3      -- d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep
+  9  WHERE a.salariu = (
+ 10          SELECT min(salariu)
+ 11          FROM angajati
+ 12          WHERE id_dep = a.id_dep)
+ 13  GROUP BY a.id_dep, a.nume, a.salariu
+ 14  ORDER BY a.nume;
+
+NUME                              SALARIU
+------------------------------ ----------
+JAMES                                 950
+MILLER                               1300
+SMITH                              1017.5
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep
+  9  WHERE a.salariu = (
+ 10          SELECT min(salariu)
+ 11          FROM angajati
+ 12          WHERE id_dep = a.id_dep)
+ 13  GROUP BY a.id_dep, a.nume, a.salariu
+ 14  ORDER BY a.nume;
+    d.den_dep,
+    *
+ERROR at line 3:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.id_dep,
+  5      a.salariu
+  6  FROM
+  7      angajati a
+  8      INNER JOIN departamente d
+  9              ON a.id_dep = d.id_dep
+ 10  WHERE a.salariu = (
+ 11          SELECT min(salariu)
+ 12          FROM angajati
+ 13          WHERE id_dep = a.id_dep)
+ 14  GROUP BY a.id_dep, a.nume, a.salariu
+ 15  ORDER BY a.nume;
+    d.den_dep,
+    *
+ERROR at line 3:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> SELECT
+  2      a.nume,
+  3      a.den_dep,
+  4      a.id_dep,
+  5      a.salariu
+  6  FROM
+  7      angajati a
+  8      INNER JOIN departamente d
+  9              ON a.id_dep = d.id_dep
+ 10  WHERE a.salariu = (
+ 11          SELECT min(salariu)
+ 12          FROM angajati
+ 13          WHERE id_dep = a.id_dep)
+ 14  GROUP BY a.id_dep, a.nume, a.salariu
+ 15  ORDER BY a.nume;
+    a.den_dep,
+    *
+ERROR at line 3:
+ORA-00904: "A"."DEN_DEP": invalid identifier
+
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep
+  9  -- GROUP BY a.id_dep, a.nume, a.salariu
+ 10  ORDER BY a.nume;
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+ADAMS                          RESEARCH                             1100
+ALLEN                          SALES                             1756.67
+BLAKE                          SALES                             3006.67
+CLARK                          ACCOUNTING                           2450
+FORD                           RESEARCH                             3000
+JAMES                          SALES                                 950
+JONES                          RESEARCH                           3192.5
+KING                           ACCOUNTING                           5000
+MARTIN                         SALES                                1250
+MILLER                         ACCOUNTING                           1300
+SCOTT                          RESEARCH                             3000
+SMITH                          RESEARCH                           1017.5
+TURNER                         SALES                                1500
+WARD                           SALES                             1406.67
+
+14 rows selected.
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep
+  9  GROUP BY a.id_dep, a.nume, a.salariu
+ 10  ORDER BY a.nume;
+    d.den_dep,
+    *
+ERROR at line 3:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep
+  9  GROUP BY a.id_dep, a.nume
+ 10  ORDER BY a.nume;
+    d.den_dep,
+    *
+ERROR at line 3:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep
+  9  GROUP BY a.id_dep
+ 10  ORDER BY a.nume;
+    a.nume,
+    *
+ERROR at line 2:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM
+  6      angajati a
+  7      INNER JOIN departamente d
+  8              ON a.id_dep = d.id_dep
+  9  GROUP BY a.nume
+ 10  ORDER BY a.nume;
+    d.den_dep,
+    *
+ERROR at line 3:
+ORA-00979: not a GROUP BY expression
+
+
+SQL>
+SQL> SELECT
+  2      a.nume,
+  3      a.salariu
+  4  FROM
+  5      angajati a
+  6      INNER JOIN departamente d
+  7              ON a.id_dep = d.id_dep
+  8  WHERE a.salariu = (
+  9          SELECT min(salariu)
+ 10          FROM angajati
+ 11          WHERE id_dep = a.id_dep)
+ 12  GROUP BY a.id_dep, a.nume, a.salariu
+ 13  ORDER BY a.nume;
+
+NUME                              SALARIU
+------------------------------ ----------
+JAMES                                 950
+MILLER                               1300
+SMITH                              1017.5
+
+SQL> SELECT
+  2      a.nume,
+  3      d.den_dep,
+  4      a.salariu
+  5  FROM angajati a
+  6  INNER JOIN departamente d
+  7      ON a.id_dep = d.id_dep
+  8  WHERE
+  9      a.salariu =
+ 10      (SELECT
+ 11          min(b.salariu)
+ 12      FROM angajati b
+ 13      WHERE b.id_dep = b.id_dep)
+ 14  ORDER BY a.nume;
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+JAMES                          SALES                                 950
+
+SQL> SELECT
+  2      nume,
+  3      den_dep,
+  4      salariu
+  5  FROM
+  6      angajati
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      (id_dep, salariu) IN
+ 10      (SELECT
+ 11          id_dep,
+ 12          min(salariu)
+ 13      FROM angajati
+ 14      GROUP BY id_dep)
+ 15  ORDER BY a.nume;
+ORDER BY a.nume
+         *
+ERROR at line 15:
+ORA-00904: "A"."NUME": invalid identifier
+
+
+SQL> SELECT
+  2      nume,
+  3      den_dep,
+  4      salariu
+  5  FROM
+  6      angajati
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      (id_dep, salariu) IN
+ 10      (SELECT
+ 11          id_dep,
+ 12          min(salariu)
+ 13      FROM angajati
+ 14      GROUP BY id_dep);
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+SMITH                          RESEARCH                           1017.5
+JAMES                          SALES                                 950
+MILLER                         ACCOUNTING                           1300
+
+SQL> SELECT
+  2      nume,
+  3      den_dep,
+  4      salariu
+  5  FROM
+  6      angajati
+  7      NATURAL JOIN departamente
+  8  WHERE
+  9      (id_dep, salariu) IN
+ 10      (SELECT
+ 11          id_dep,
+ 12          min(salariu)
+ 13      FROM angajati
+ 14      GROUP BY id_dep)
+ 15  ORDER BY nume;
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+JAMES                          SALES                                 950
+MILLER                         ACCOUNTING                           1300
+SMITH                          RESEARCH                           1017.5
+
+SQL> SELECT
+  2      a1.nume,
+  3      b.den_dep,
+  4      a2.salariu
+  5  FROM
+  6  angajati a1 JOIN
+  7  (departamente b INNER JOIN
+  8  (SELECT
+  9          id_dep,min(salariu) salariu
+ 10  FROM angajati
+ 11  GROUP by id_dep) a2
+ 12
+SQL>     ON a2.id_dep = b.id_dep) ON
+SP2-0734: unknown command beginning "ON a2.id_d..." - rest of line ignored.
+SQL> a1.salariu = a2.salariu
+ 11* GROUP by id_dep) a21.salariu = a2.salariu
+SQL> ORDER BY a1.nume;
+SP2-0734: unknown command beginning "ORDER BY a..." - rest of line ignored.
+SQL> SELECT
+  2      a1.nume,
+  3      b.den_dep,
+  4      a2.salariu
+  5  FROM
+  6  angajati a1 JOIN
+  7  (departamente b INNER JOIN
+  8  (SELECT
+  9          id_dep,min(salariu) salariu
+ 10  FROM angajati
+ 11  GROUP by id_dep) a2
+ 12
+SQL>     ON a2.id_dep = b.id_dep) ON
+SP2-0734: unknown command beginning "ON a2.id_d..." - rest of line ignored.
+SQL> a1.salariu = a2.salariu
+ 11* GROUP by id_dep) a21.salariu = a2.salariu
+SQL> ORDER BY a1.nume;
+SP2-0734: unknown command beginning "ORDER BY a..." - rest of line ignored.
+SQL> SELECT a1.nume, b.den_dep, a2.salariuFROMangajati a1 JOIN(departamente b INNER JOIN(SELECT id_dep,min(salariu) salariuFROM angajatiGROUP by id_dep) a2ON a2.id_dep = b.id_dep) ONa1.salariu = a2.salariuORDER BY a1.nume;
+SELECT a1.nume, b.den_dep, a2.salariuFROMangajati a1 JOIN(departamente b INNER JOIN(SELECT id_dep,min(salariu) salariuFROM angajatiGROUP by id_dep) a2ON a2.id_dep = b.id_dep) ONa1.salariu = a2.salariuORDER BY a1.nume
+                                                     *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL>
+SQL> SELECT a1.nume, b.den_dep, a2.salariuFROMangajati a1 JOIN(departamente b INNER JOIN(SELECT id_dep,min(salariu) salariuFROM angajatiGROUP by id_dep) a2ON a2.id_dep = b.id_dep) ONa1.salariu = a2.salariuORDER BY a1.nume;
+SELECT a1.nume, b.den_dep, a2.salariuFROMangajati a1 JOIN(departamente b INNER JOIN(SELECT id_dep,min(salariu) salariuFROM angajatiGROUP by id_dep) a2ON a2.id_dep = b.id_dep) ONa1.salariu = a2.salariuORDER BY a1.nume
+                                                     *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> SELECT a1.nume, b.den_dep, a2.salariu
+  2  FROM
+  3  angajati a1 JOIN
+  4  (departamente b INNER JOIN
+  5  (SELECT id_dep,min(salariu) salariu
+  6  FROM angajati
+  7  GROUP by id_dep) a2
+  8  ON a2.id_dep = b.id_dep) ON
+  9  a1.salariu = a2.salariu
+ 10  ORDER BY a1.nume;
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+JAMES                          SALES                                 950
+MILLER                         ACCOUNTING                           1300
+SMITH                          RESEARCH                           1017.5
+
+SQL> SELECT
+  2      a1.nume,
+  3      d.den_dep,
+  4      a2.salariu
+  5  FROM
+  6  angajati a1 JOIN
+  7  (departamente d INNER JOIN
+  8  (SELECT
+  9          id_dep,
+ 10          min(salariu) salariu
+ 11  FROM angajati
+ 12  GROUP by id_dep) a2
+ 13  ON a2.id_dep = b.id_dep) ON
+ 14  a1.salariu = a2.salariu
+ 15  ORDER BY a1.nume;
+ON a2.id_dep = b.id_dep) ON
+               *
+ERROR at line 13:
+ORA-00904: "B"."ID_DEP": invalid identifier
+
+
+SQL> SELECT
+  2      a1.nume,
+  3      d.den_dep,
+  4      a2.salariu
+  5  FROM
+  6  angajati a1 JOIN
+  7  (departamente d INNER JOIN
+  8  (SELECT
+  9          id_dep,
+ 10          min(salariu) salariu
+ 11  FROM angajati
+ 12  GROUP by id_dep) a2
+ 13  ON a2.id_dep = d.id_dep) ON
+ 14  a1.salariu = a2.salariu
+ 15  ORDER BY a1.nume;
+
+NUME                           DEN_DEP                           SALARIU
+------------------------------ ------------------------------ ----------
+JAMES                          SALES                                 950
+MILLER                         ACCOUNTING                           1300
+SMITH                          RESEARCH                           1017.5
+
+SQL>
+SQL> SELECT
+  2      a2.avg(salariu)
+  3  FROM
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  GROUP BY a2.id_sef;
+    a2.avg(salariu)
+    *
+ERROR at line 2:
+ORA-00904: "A2"."AVG": invalid identifier
+
+
+SQL> SELECT
+  2      salariu
+  3  FROM
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  GROUP BY a2.id_sef;
+    salariu
+    *
+ERROR at line 2:
+ORA-00918: column ambiguously defined
+
+
+SQL> SELECT
+  2      a1.salariu
+  3  FROM
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  GROUP BY a2.id_sef;
+    a1.salariu
+    *
+ERROR at line 2:
+ORA-00979: not a GROUP BY expression
+
+
+SQL> SELECT
+  2      a1.salariu
+  3  FROM
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang;
+
+   SALARIU
+----------
+      3000
+      3000
+   1756.67
+   1406.67
+      1250
+      1500
+       950
+      1300
+      1100
+    3192.5
+   3006.67
+      2450
+    1017.5
+
+13 rows selected.
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------
+      7369 SMITH                          CLERK                      7902 17-DEC-80     1017.5                    20
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81    1756.67        355         30
+      7521 WARD                           SALESMAN                   7698 22-FEB-81    1406.67        555         30
+      7566 JONES                          MANAGER                    7839 02-APR-81     3192.5                    20
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81    3006.67                    30
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10
+      1111 IONESCU                        CLERK                                          12345
+
+15 rows selected.
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a1.nume "Nume ang",
+  4      a1.salariu "Sal Ang",
+  5  FROM
+  6  angajati a1
+  7      INNER JOIN departamente d
+  8          ON a1.id_dep = d.id_dep
+  9  ORDER BY a1.nume;
+FROM
+*
+ERROR at line 5:
+ORA-00936: missing expression
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      a1.nume "Nume ang",
+  4      a1.salariu "Sal Ang"
+  5  FROM
+  6  angajati a1
+  7      INNER JOIN departamente d
+  8          ON a1.id_dep = d.id_dep
+  9  ORDER BY a1.nume;
+
+DEN_DEP                        Nume ang                          Sal Ang
+------------------------------ ------------------------------ ----------
+RESEARCH                       ADAMS                                1100
+SALES                          ALLEN                             1756.67
+SALES                          BLAKE                             3006.67
+ACCOUNTING                     CLARK                                2450
+RESEARCH                       FORD                                 3000
+SALES                          JAMES                                 950
+RESEARCH                       JONES                              3192.5
+ACCOUNTING                     KING                                 5000
+SALES                          MARTIN                               1250
+ACCOUNTING                     MILLER                               1300
+RESEARCH                       SCOTT                                3000
+RESEARCH                       SMITH                              1017.5
+SALES                          TURNER                               1500
+SALES                          WARD                              1406.67
+
+14 rows selected.
+
+SQL> SELECT
+  2      d.den_dep,
+  3      (SELECT avg (unique (a1.salariu))
+  4          FROM angajati a1
+  5          WHERE a1.id_sef = a.id_ang) Sal_med_comp,
+  6      a1.nume "Nume ang",
+  7      a1.salariu "Sal Ang"
+  8  FROM
+  9  angajati a1
+ 10      INNER JOIN departamente d
+ 11          ON a1.id_dep = d.id_dep
+ 12  WHERE
+ 13      salariu >
+ 14      (SELECT
+ 15          ROUND(avg(sefi.salariu)) sal_med_sef
+ 16          FROM angajati sefi
+ 17          WHERE
+ 18          sefi.id_ang IN (SELECT a.id_sef
+ 19                          FROM angajati a
+ 20                          WHERE a.id_sef IS NOT NULL) AND
+ 21      sefi.id_dep = a1.id_dep) / 2
+ 22  ORDER BY a1.nume;
+        WHERE a1.id_sef = a.id_ang) Sal_med_comp,
+                          *
+ERROR at line 5:
+ORA-00904: "A"."ID_ANG": invalid identifier
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      (SELECT avg (unique (a1.salariu))
+  4          FROM angajati a1
+  5          WHERE a1.id_sef = a.id_ang) Sal_med_comp,
+  6      a1.nume "Nume ang",
+  7      a1.salariu "Sal Ang"
+  8  FROM
+  9  angajati a1
+ 10      INNER JOIN departamente d
+ 11          ON a1.id_dep = d.id_dep
+ 12  WHERE
+ 13      salariu >
+ 14      (SELECT
+ 15          ROUND(avg(sefi.salariu)) sal_med_sef
+ 16          FROM angajati sefi
+ 17          WHERE
+ 18          sefi.id_ang IN (SELECT a.id_sef
+ 19                          FROM angajati a
+ 20                          WHERE a.id_sef IS NOT NULL) AND
+ 21      sefi.id_dep = a1.id_dep) / 2;
+        WHERE a1.id_sef = a.id_ang) Sal_med_comp,
+                          *
+ERROR at line 5:
+ORA-00904: "A"."ID_ANG": invalid identifier
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      (SELECT avg (unique (a1.salariu))
+  4          FROM angajati a
+  5          WHERE a.id_sef = a1.id_ang) Sal_med_comp,
+  6      a1.nume "Nume ang",
+  7      a1.salariu "Sal Ang"
+  8  FROM
+  9  angajati a1
+ 10      INNER JOIN departamente d
+ 11          ON a1.id_dep = d.id_dep
+ 12  WHERE
+ 13      salariu >
+ 14      (SELECT
+ 15          ROUND(avg(sefi.salariu)) sal_med_sef
+ 16          FROM angajati sefi
+ 17          WHERE
+ 18          sefi.id_ang IN (SELECT a.id_sef
+ 19                          FROM angajati a
+ 20                          WHERE a.id_sef IS NOT NULL) AND
+ 21      sefi.id_dep = a1.id_dep) / 2;
+
+DEN_DEP                        SAL_MED_COMP Nume ang                          Sal Ang
+------------------------------ ------------ ------------------------------ ----------
+ACCOUNTING                             2450 CLARK                                2450
+ACCOUNTING                             5000 KING                                 5000
+RESEARCH                             3192.5 JONES                              3192.5
+RESEARCH                               3000 SCOTT                                3000
+RESEARCH                               3000 FORD                                 3000
+SALES                                       ALLEN                             1756.67
+SALES                               3006.67 BLAKE                             3006.67
+
+7 rows selected.
+
+SQL> ORDER BY a1.nume;
+SP2-0734: unknown command beginning "ORDER BY a..." - rest of line ignored.
+SQL> rollback
+  2  ;
+
+Rollback complete.
+
+SQL> SELECT
+  2      d.den_dep,
+  3      (SELECT avg (unique (a1.salariu))
+  4          FROM angajati a
+  5          WHERE a.id_sef = a1.id_ang) Sal_med_comp,
+  6      a1.nume "Nume ang",
+  7      a1.salariu "Sal Ang"
+  8  FROM
+  9  angajati a1
+ 10      INNER JOIN departamente d
+ 11          ON a1.id_dep = d.id_dep
+ 12  WHERE
+ 13      salariu >
+ 14      (SELECT
+ 15          ROUND(avg(sefi.salariu)) sal_med_sef
+ 16          FROM angajati sefi
+ 17          WHERE
+ 18          sefi.id_ang IN (SELECT a.id_sef
+ 19                          FROM angajati a
+ 20                          WHERE a.id_sef IS NOT NULL) AND
+ 21      sefi.id_dep = a1.id_dep) / 2
+ 22  ORDER BY a1.nume;
+
+DEN_DEP                        SAL_MED_COMP Nume ang                          Sal Ang
+------------------------------ ------------ ------------------------------ ----------
+SALES                                       ALLEN                                1600
+SALES                                  2850 BLAKE                                2850
+ACCOUNTING                             2450 CLARK                                2450
+RESEARCH                               3000 FORD                                 3000
+RESEARCH                               2975 JONES                                2975
+ACCOUNTING                             5000 KING                                 5000
+RESEARCH                               3000 SCOTT                                3000
+SALES                                       TURNER                               1500
+
+8 rows selected.
+
+SQL> SELECT
+  2      d.den_dep,
+  3      b.sal_med_sef,
+  4      a.nume "Nume ang",
+  5      a.salariu "Sal Ang"
+  6  FROM
+  7  angajati a,
+  8      departamente d,
+  9      (SELECT
+ 10          avg(salariu)) sal_med_sef,
+ 11          id_dep
+ 12      FROM angajati
+ 13      WHERE id_ang IN
+ 14          (SELECT DISTINCT id_Sef
+ 15          FROM angajati
+ 16          WHERE id_sef IS NOT NULL)
+ 17      GROUP BY id_dep) b
+ 18  WHERE
+ 19      a.id_dep = d.id_dep AND
+ 20      a.id_dep = b.id_dep AND
+ 21      a.salariu > b.sal_med_sef / 2
+ 22  ORDER BY a.nume;
+        avg(salariu)) sal_med_sef,
+                    *
+ERROR at line 10:
+ORA-00923: FROM keyword not found where expected
+
+
+SQL> SELECT
+  2      d.den_dep,
+  3      b.sal_med_sef,
+  4      a.nume "Nume ang",
+  5      a.salariu "Sal Ang"
+  6  FROM
+  7  angajati a,
+  8      departamente d,
+  9      (SELECT
+ 10          avg(salariu) sal_med_sef,
+ 11          id_dep
+ 12      FROM angajati
+ 13      WHERE id_ang IN
+ 14          (SELECT DISTINCT id_Sef
+ 15          FROM angajati
+ 16          WHERE id_sef IS NOT NULL)
+ 17      GROUP BY id_dep) b
+ 18  WHERE
+ 19      a.id_dep = d.id_dep AND
+ 20      a.id_dep = b.id_dep AND
+ 21      a.salariu > b.sal_med_sef / 2
+ 22  ORDER BY a.nume;
+
+DEN_DEP                        SAL_MED_SEF Nume ang                          Sal Ang
+------------------------------ ----------- ------------------------------ ----------
+SALES                                 2850 ALLEN                                1600
+SALES                                 2850 BLAKE                                2850
+ACCOUNTING                            3725 CLARK                                2450
+RESEARCH                        2991.66667 FORD                                 3000
+RESEARCH                        2991.66667 JONES                                2975
+ACCOUNTING                            3725 KING                                 5000
+RESEARCH                        2991.66667 SCOTT                                3000
+SALES                                 2850 TURNER                               1500
+
+8 rows selected.
+
+SQL> -- metoda 1
+SQL> SELECT
+  2      d.den_dep,
+  3      (SELECT avg (unique (a1.salariu))
+  4          FROM angajati a
+  5          WHERE a.id_sef = a1.id_ang) Sal_med_comp,
+  6      a1.nume "Nume ang",
+  7      a1.salariu "Sal Ang"
+  8  FROM
+  9  angajati a1
+ 10      INNER JOIN departamente d
+ 11          ON a1.id_dep = d.id_dep
+ 12  WHERE
+ 13      salariu >
+ 14      (SELECT
+ 15          ROUND(avg(sefi.salariu)) sal_med_sef
+ 16          FROM angajati sefi
+ 17          WHERE
+ 18          sefi.id_ang IN (SELECT a.id_sef
+ 19                          FROM angajati a
+ 20                          WHERE a.id_sef IS NOT NULL) AND
+ 21      sefi.id_dep = a1.id_dep) / 2
+ 22  ORDER BY a1.nume;
+
+DEN_DEP                        SAL_MED_COMP Nume ang                          Sal Ang
+------------------------------ ------------ ------------------------------ ----------
+SALES                                       ALLEN                                1600
+SALES                                  2850 BLAKE                                2850
+ACCOUNTING                             2450 CLARK                                2450
+RESEARCH                               3000 FORD                                 3000
+RESEARCH                               2975 JONES                                2975
+ACCOUNTING                             5000 KING                                 5000
+RESEARCH                               3000 SCOTT                                3000
+SALES                                       TURNER                               1500
+
+8 rows selected.
+
+SQL> update login_lab_bd set data_sf= sysdate where laborator='Lab8';
+
+0 rows updated.
+
+SQL> update login_lab_bd set durata= round((data_sf-data_in)*24*60) where laborator='Lab8';
+
+0 rows updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss’), host_name
+  2  from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    TO_CHAR(STARTUP_TIM HOST_NAME
+--------------- ---------------- ------------------- ----------------------------------------------------------------
+              1 db19c            23-04-2021 08:50:46 DESKTOP-04HOUK7
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput,
+  2  to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE
+------------------------------ ---------- ---------- ------------------- ------------------- --------------
+Filimon Adrian                 334CC      Lab5       01-04-2021 10:34:47 01-04-2021 12:20:40            106
+Filimon Adrian                 334CC      Lab7       16-04-2021 09:52:31 16-04-2021 11:05:36             73
+Filimon Adrian                 334CC      Lab2       12-03-2021 12:12:12 12-03-2021 02:48:03            156
+Filimon Adrian                 334CC      Lab3       18-03-2021 10:13:27 18-03-2021 12:01:56            108
+Filimon Adrian                 334CC      Lab3       18-03-2021 11:25:15 18-03-2021 12:01:56             37
+Filimon Adrian                 334CC      Lab4       26-03-2021 10:23:25 26-03-2021 12:30:51            127
+Filimon Adrian                 334CC      Lab6       09-04-2021 12:33:50 09-04-2021 01:46:02             72
+
+7 rows selected.
+
+SQL> spool off;

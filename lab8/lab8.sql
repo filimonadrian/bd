@@ -112,20 +112,6 @@ WHERE
     (SELECT MAX(salariu)
         FROM angajati
         WHERE
-            LOWER(den_dep) = 'sales');
-
-
-SELECT
-    nume,
-    functie,
-    data_ang,
-    salariu
-FROM angajati
-WHERE
-    salariu >
-    (SELECT MAX(salariu)
-        FROM angajati
-        WHERE
             id_dep = (SELECT id_dep
                         FROM departamente
                         WHERE
@@ -193,10 +179,135 @@ FROM
         FROM angajati
         GROUP BY id_dep) b
     ON a.id_dep = b.id_dep
+ORDER BY id_dep;
 
-ORDER BY b.id_dep;
+
+-- exercitiu individual
+
+-- angajatii care au salariul egal cu salariul minim din departamentul in care lucreaza.
+-- ordonat dupa nume
+-- 4 metode
+
+-- metoooda 1
+-- un element
+SELECT
+    a.nume,
+    a.salariu
+FROM
+    angajati a
+    INNER JOIN departamente d
+            ON a.id_dep = d.id_dep
+WHERE a.salariu = (
+        SELECT min(salariu) 
+        FROM angajati 
+        WHERE id_dep = a.id_dep)
+GROUP BY a.id_dep, a.nume, a.salariu
+ORDER BY a.nume;
 
 
+-- metoda 2
+-- o linie cu mai multe coloane
+SELECT
+    nume,
+    den_dep,
+    salariu 
+FROM
+    angajati
+    NATURAL JOIN departamente
+WHERE
+    (id_dep, salariu) IN
+    (SELECT
+        id_dep,
+        min(salariu)
+    FROM angajati
+    GROUP BY id_dep)
+ORDER BY nume;
+
+-- metoda 3
+
+SELECT 
+    a.nume, 
+    d.den_dep,
+    a.salariu
+FROM angajati a
+INNER JOIN departamente d
+    ON a.id_dep = d.id_dep
+WHERE
+    (a.salariu, a.id_dep) =
+    (SELECT
+        min(b.salariu)
+    FROM angajati b
+    WHERE b.id_dep = b.id_dep)
+ORDER BY a.nume;
+
+-- metoda 4
+-- in clauza from
+SELECT
+    a1.nume, 
+    d.den_dep,
+    a2.salariu
+FROM
+	angajati a1 JOIN
+	(departamente d INNER JOIN
+	(SELECT
+        id_dep,
+        min(salariu) salariu
+	FROM angajati
+	GROUP by id_dep) a2
+	ON a2.id_dep = d.id_dep) ON
+	a1.salariu = a2.salariu
+ORDER BY a1.nume;
+
+
+-- exercitiu final
+
+-- metoda 1
+SELECT
+    d.den_dep,
+    (SELECT avg (unique (a1.salariu))
+        FROM angajati a
+        WHERE a.id_sef = a1.id_ang) Sal_med_comp,
+    a1.nume "Nume ang", 
+    a1.salariu "Sal Ang"
+FROM
+	angajati a1
+    INNER JOIN departamente d
+        ON a1.id_dep = d.id_dep
+WHERE
+    salariu > 
+    (SELECT
+        ROUND(avg(sefi.salariu)) sal_med_sef
+        FROM angajati sefi
+        WHERE
+        sefi.id_ang IN (SELECT a.id_sef
+                        FROM angajati a
+                        WHERE a.id_sef IS NOT NULL) AND
+    sefi.id_dep = a1.id_dep) / 2
+ORDER BY a1.nume;
+
+-- metoda 2
+SELECT
+    d.den_dep,
+    b.sal_med_sef,
+    a.nume "Nume ang", 
+    a.salariu "Sal Ang"
+FROM
+	angajati a,
+    departamente d,
+    (SELECT
+        avg(salariu) sal_med_sef,
+        id_dep
+    FROM angajati
+    WHERE id_ang IN
+        (SELECT DISTINCT id_Sef
+        FROM angajati
+        WHERE id_sef IS NOT NULL)
+    GROUP BY id_dep) b
+WHERE
+    a.id_dep = d.id_dep AND
+    a.id_dep = b.id_dep AND
+    a.salariu > b.sal_med_sef / 2
+ORDER BY a.nume;
 
 
 update login_lab_bd set data_sf= sysdate where laborator='Lab8';
