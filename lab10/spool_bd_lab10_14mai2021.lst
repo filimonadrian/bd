@@ -1483,3 +1483,232 @@ SQL>     (select max(sal_sefi) from
   5      where id_ang in (select id_sef from angajati)
   6      group by id_dep));
 
+MAX(SAL_SEFI)                                                                                                                                                                                           
+-------------                                                                                                                                                                                           
+         8975                                                                                                                                                                                           
+
+SQL> select
+  2      id_dep
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) sal_sefi
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii
+  9  where suma_salarii.sal_sefi =
+ 10      (select max(sal_sefi) from
+ 11          (select
+ 12          id_dep, SUM(salariu) sal_sefi
+ 13      from angajati
+ 14      where id_ang in (select id_sef from angajati)
+ 15      group by id_dep));
+
+    ID_DEP                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+        20                                                                                                                                                                                              
+
+SQL> select
+  2      id_dep
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) sal_sefi
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii
+  9  where suma_salarii.sal_sefi = (select max(sal_sefi)
+ 10                                  from suma_salarii);
+                                from suma_salarii)
+                                     *
+ERROR at line 10:
+ORA-00942: table or view does not exist 
+
+
+SQL> select
+  2      id_dep
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) sal_sefi
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii
+  9  where suma_salarii.sal_sefi =
+ 10      (select max(sal_sefi) from
+ 11          (select
+ 12          id_dep, SUM(salariu) sal_sefi
+ 13      from angajati
+ 14      where id_ang in (select id_sef from angajati)
+ 15      group by id_dep));
+
+    ID_DEP                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+        20                                                                                                                                                                                              
+
+SQL> select
+  2      a1.id_dep,
+  3      medie_dept.sal_med_dept sal_med_depart,
+  4      a1.nume,
+  5      a1.functie,
+  6      a1.salariu
+  7  from
+  8      angajati a1,
+  9      (SELECT id_dep, avg (a.salariu) sal_med_dept
+ 10      FROM angajati a
+ 11      group by id_dep) medie_dept,
+ 12  where
+ 13      a1.id_dep =
+ 14          (select
+ 15          id_dep
+ 16          from
+ 17              (select
+ 18                  id_dep, SUM(salariu) sal_sefi
+ 19              from angajati
+ 20              where id_ang in (select id_sef from angajati)
+ 21              group by id_dep) suma_salarii
+ 22          where suma_salarii.sal_sefi =
+ 23              (select max(sal_sefi) from
+ 24                  (select
+ 25                      id_dep, SUM(salariu) sal_sefi
+ 26                  from angajati
+ 27                  where id_ang in (select id_sef from angajati)
+ 28              group by id_dep)))
+ 29      AND
+ 30      a1.id_dep = medie_dept.id_dep AND
+ 31      a1.salariu > medie_dept.sal_med_dept;
+where
+*
+ERROR at line 12:
+ORA-00903: invalid table name 
+
+
+SQL> select
+  2      a1.id_dep,
+  3      medie_dept.sal_med_dept sal_med_depart,
+  4      a1.nume,
+  5      a1.functie,
+  6      a1.salariu
+  7  from
+  8      angajati a1,
+  9      (SELECT id_dep, avg (a.salariu) sal_med_dept
+ 10      FROM angajati a
+ 11      group by id_dep) medie_dept
+ 12  where
+ 13      a1.id_dep =
+ 14          (select
+ 15          id_dep
+ 16          from
+ 17              (select
+ 18                  id_dep, SUM(salariu) sal_sefi
+ 19              from angajati
+ 20              where id_ang in (select id_sef from angajati)
+ 21              group by id_dep) suma_salarii
+ 22          where suma_salarii.sal_sefi =
+ 23              (select max(sal_sefi) from
+ 24                  (select
+ 25                      id_dep, SUM(salariu) sal_sefi
+ 26                  from angajati
+ 27                  where id_ang in (select id_sef from angajati)
+ 28              group by id_dep)))
+ 29      AND
+ 30      a1.id_dep = medie_dept.id_dep AND
+ 31      a1.salariu > medie_dept.sal_med_dept;
+
+    ID_DEP SAL_MED_DEPART NUME                           FUNCTIE                 SALARIU                                                                                                                
+---------- -------------- ------------------------------ -------------------- ----------                                                                                                                
+        20           2175 JONES                          MANAGER                    2975                                                                                                                
+        20           2175 SCOTT                          ANALYST                    3000                                                                                                                
+        20           2175 FORD                           ANALYST                    3000                                                                                                                
+
+SQL> 
+SQL> create table salarii (
+  2      id_depart,
+  3      sal_med_depart,
+  4      nume_ang not null,
+  5      job_ang,
+  6      salariu_ang
+  7  )
+  8  as
+  9  select
+ 10      a1.id_dep,
+ 11      medie_dept.sal_med_dept sal_med_depart,
+ 12      a1.nume,
+ 13      a1.functie,
+ 14      a1.salariu
+ 15  from
+ 16      angajati a1,
+ 17      (SELECT id_dep, avg (a.salariu) sal_med_dept
+ 18      FROM angajati a
+ 19      group by id_dep) medie_dept
+ 20  where
+ 21      a1.id_dep =
+ 22          (select
+ 23          id_dep
+ 24          from
+ 25              (select
+ 26                  id_dep, SUM(salariu) sal_sefi
+ 27              from angajati
+ 28              where id_ang in (select id_sef from angajati)
+ 29              group by id_dep) suma_salarii
+ 30          where suma_salarii.sal_sefi =
+ 31              (select max(sal_sefi) from
+ 32                  (select
+ 33                      id_dep, SUM(salariu) sal_sefi
+ 34                  from angajati
+ 35                  where id_ang in (select id_sef from angajati)
+ 36              group by id_dep)))
+ 37      AND
+ 38      a1.id_dep = medie_dept.id_dep AND
+ 39      a1.salariu > medie_dept.sal_med_dept;
+
+Table created.
+
+SQL> select * from salarii;'
+  2  ;
+ERROR:
+ORA-01756: quoted string not properly terminated 
+
+
+SQL> select * from salarii;
+
+ ID_DEPART SAL_MED_DEPART NUME_ANG                       JOB_ANG              SALARIU_ANG                                                                                                               
+---------- -------------- ------------------------------ -------------------- -----------                                                                                                               
+        20           2175 JONES                          MANAGER                     2975                                                                                                               
+        20           2175 SCOTT                          ANALYST                     3000                                                                                                               
+        20           2175 FORD                           ANALYST                     3000                                                                                                               
+
+SQL> update login_lab_bd set data_sf= sysdate where laborator='Lab10';
+
+1 row updated.
+
+SQL> update login_lab_bd set durata= round((data_sf-data_in)*24*60) where laborator='Lab10';
+
+1 row updated.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> select instance_number,instance_name, to_char(startup_time, 'dd-mm-yyyy hh:mi:ss'), host_name
+  2  from v$instance;
+
+INSTANCE_NUMBER INSTANCE_NAME    TO_CHAR(STARTUP_TIM HOST_NAME                                                                                                                                          
+--------------- ---------------- ------------------- ----------------------------------------------------------------                                                                                   
+              1 db19c            13-05-2021 10:24:53 DESKTOP-04HOUK7                                                                                                                                    
+
+SQL> select nume_stud, grupa, laborator, to_char(data_in, 'dd-mm-yyyy hh:mi:ss') data_inceput,
+  2  to_char(data_sf, 'dd-mm-yyyy hh:mi:ss') data_sfarsit, durata minute_lucrate from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  DATA_INCEPUT        DATA_SFARSIT        MINUTE_LUCRATE                                                                                             
+------------------------------ ---------- ---------- ------------------- ------------------- --------------                                                                                             
+Filimon Adrian                 334CC      Lab9       07-05-2021 09:29:20 07-05-2021 02:32:47            303                                                                                             
+Filimon Adrian                 334CC      Lab5       01-04-2021 10:34:47 01-04-2021 12:20:40            106                                                                                             
+Filimon Adrian                 334CC      Lab7       16-04-2021 09:52:31 16-04-2021 11:05:36             73                                                                                             
+Filimon Adrian                 334CC      Lab2       12-03-2021 12:12:12 12-03-2021 02:48:03            156                                                                                             
+Filimon Adrian                 334CC      Lab3       18-03-2021 10:13:27 18-03-2021 12:01:56            108                                                                                             
+Filimon Adrian                 334CC      Lab3       18-03-2021 11:25:15 18-03-2021 12:01:56             37                                                                                             
+Filimon Adrian                 334CC      Lab4       26-03-2021 10:23:25 26-03-2021 12:30:51            127                                                                                             
+Filimon Adrian                 334CC      Lab6       09-04-2021 12:33:50 09-04-2021 01:46:02             72                                                                                             
+Filimon Adrian                 334CC      Lab10      14-05-2021 12:23:24 14-05-2021 02:21:09            118                                                                                             
+
+9 rows selected.
+
+SQL> spool off
