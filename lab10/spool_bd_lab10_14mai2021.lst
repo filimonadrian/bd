@@ -1,0 +1,1485 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+14-05-2021 12:23:24                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values( 'Filimon Adrian', '334CC', 'Lab10', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Filimon Adrian                 334CC      Lab9       SCOTT      07-MAY-21 07-MAY-21        303                                                                                                          
+Filimon Adrian                 334CC      Lab5       SCOTT      01-APR-21 01-APR-21        106                                                                                                          
+Filimon Adrian                 334CC      Lab7       SCOTT      16-APR-21 16-APR-21         73                                                                                                          
+Filimon Adrian                 334CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        156                                                                                                          
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21 18-MAR-21        108                                                                                                          
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21 18-MAR-21         37                                                                                                          
+Filimon Adrian                 334CC      Lab4       SCOTT      26-MAR-21 26-MAR-21        127                                                                                                          
+Filimon Adrian                 334CC      Lab6       SCOTT      09-APR-21 09-APR-21         72                                                                                                          
+Filimon Adrian                 334CC      Lab10      SCOTT      14-MAY-21                                                                                                                               
+
+9 rows selected.
+
+SQL> create table exemplu (
+  2      data_implicita date default sysdate,
+  3      numar_implicit number(7, 2) default 7.24,
+  4      string_implicit varchar(5) default 'test',
+  5      operator varchar2(10) default user
+  6  );
+
+Table created.
+
+SQL> describe exemplu;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ DATA_IMPLICITA                                                                                                             DATE
+ NUMAR_IMPLICIT                                                                                                             NUMBER(7,2)
+ STRING_IMPLICIT                                                                                                            VARCHAR2(5)
+ OPERATOR                                                                                                                   VARCHAR2(10)
+
+SQL> select table_name, column_name, data_default
+  2  from user_tab_columns
+  3  where table_name='EXEMPLU';
+
+TABLE_NAME                                                                                                                                                                                              
+--------------------------------------------------------------------------------------------------------------------------------                                                                        
+COLUMN_NAME                                                                                                                                                                                             
+--------------------------------------------------------------------------------------------------------------------------------                                                                        
+DATA_DEFAULT                                                                                                                                                                                            
+--------------------------------------------------------------------------------                                                                                                                        
+EXEMPLU                                                                                                                                                                                                 
+DATA_IMPLICITA                                                                                                                                                                                          
+sysdate                                                                                                                                                                                                 
+                                                                                                                                                                                                        
+EXEMPLU                                                                                                                                                                                                 
+NUMAR_IMPLICIT                                                                                                                                                                                          
+7.24                                                                                                                                                                                                    
+                                                                                                                                                                                                        
+EXEMPLU                                                                                                                                                                                                 
+STRING_IMPLICIT                                                                                                                                                                                         
+'test'                                                                                                                                                                                                  
+                                                                                                                                                                                                        
+EXEMPLU                                                                                                                                                                                                 
+OPERATOR                                                                                                                                                                                                
+user                                                                                                                                                                                                    
+                                                                                                                                                                                                        
+
+SQL> 
+SQL> 
+SQL> 
+SQL> create table studenti (
+  2      facultate char(30) default 'Automatica si Calculatoare',
+  3      catedra char (20),
+  4      cnp number(13),
+  5      nume varchar (30),
+  6      data_nasterii date,
+  7      an_univ_number(4) default 2019,
+  8      medie_admitere number(4, 2),
+  9      discip_oblig varchar2(20) default 'Matematica',
+ 10      discip_opt varchar(20) default 'Fizica',
+ 11      operator varchar(20) default user,
+ 12      data_op timestamp default sysdate
+ 13  );
+    an_univ_number(4) default 2019,
+                  *
+ERROR at line 7:
+ORA-00902: invalid datatype 
+
+
+SQL> create table studenti (
+  2      facultate char(30) default 'Automatica si Calculatoare',
+  3      catedra char (20),
+  4      cnp number(13),
+  5      nume varchar (30),
+  6      data_nasterii date,
+  7      an_univ number(4) default 2019,
+  8      medie_admitere number(4, 2),
+  9      discip_oblig varchar2(20) default 'Matematica',
+ 10      discip_opt varchar(20) default 'Fizica',
+ 11      operator varchar(20) default user,
+ 12      data_op timestamp default sysdate
+ 13  );
+
+Table created.
+
+SQL> describe studenti
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ FACULTATE                                                                                                                  CHAR(30)
+ CATEDRA                                                                                                                    CHAR(20)
+ CNP                                                                                                                        NUMBER(13)
+ NUME                                                                                                                       VARCHAR2(30)
+ DATA_NASTERII                                                                                                              DATE
+ AN_UNIV                                                                                                                    NUMBER(4)
+ MEDIE_ADMITERE                                                                                                             NUMBER(4,2)
+ DISCIP_OBLIG                                                                                                               VARCHAR2(20)
+ DISCIP_OPT                                                                                                                 VARCHAR2(20)
+ OPERATOR                                                                                                                   VARCHAR2(20)
+ DATA_OP                                                                                                                    TIMESTAMP(6)
+
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> 
+SQL> create table dept_20
+  2  as
+  3  select id_Dep, nume, data_ang, salariu + nvl(comision, 0) venit
+  4  from angajati
+  5  where id_dep = 20;
+
+Table created.
+
+SQL> select * from departamente;
+
+    ID_DEP DEN_DEP                        SEDIU                                                                                                                                                         
+---------- ------------------------------ --------------------                                                                                                                                          
+        10 ACCOUNTING                     NEW YORK                                                                                                                                                      
+        20 RESEARCH                       DALLAS                                                                                                                                                        
+        30 SALES                          CHICAGO                                                                                                                                                       
+        40 OPERATIONS                     BOSTON                                                                                                                                                        
+
+SQL> select * from dept_20;
+
+    ID_DEP NUME                           DATA_ANG       VENIT                                                                                                                                          
+---------- ------------------------------ --------- ----------                                                                                                                                          
+        20 SMITH                          17-DEC-80        800                                                                                                                                          
+        20 JONES                          02-APR-81       2975                                                                                                                                          
+        20 SCOTT                          19-APR-87       3000                                                                                                                                          
+        20 ADAMS                          23-MAY-87       1100                                                                                                                                          
+        20 FORD                           03-DEC-81       3000                                                                                                                                          
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+      1111 IONESCU                        CLERK                                          12345                                                                                                          
+
+15 rows selected.
+
+SQL> select * from angajati where id = 20;
+select * from angajati where id = 20
+                             *
+ERROR at line 1:
+ORA-00904: "ID": invalid identifier 
+
+
+SQL> select * from angajati where dept_id = 20;
+select * from angajati where dept_id = 20
+                             *
+ERROR at line 1:
+ORA-00904: "DEPT_ID": invalid identifier 
+
+
+SQL> select * from angajati where id_dep = 20;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+
+SQL> select * from dept_20;
+
+    ID_DEP NUME                           DATA_ANG       VENIT                                                                                                                                          
+---------- ------------------------------ --------- ----------                                                                                                                                          
+        20 SMITH                          17-DEC-80        800                                                                                                                                          
+        20 JONES                          02-APR-81       2975                                                                                                                                          
+        20 SCOTT                          19-APR-87       3000                                                                                                                                          
+        20 ADAMS                          23-MAY-87       1100                                                                                                                                          
+        20 FORD                           03-DEC-81       3000                                                                                                                                          
+
+SQL> create table dept_30 (
+  2      id default 30,
+  3      nume not null,
+  4      data_ang,
+  5      prima
+  6  )
+  7  as
+  8  select
+  9      id_dep, nume, data_ang,
+ 10      round (0.15 * (salariu + nvl(comision, 0)), 0)
+ 11  from angajati
+ 12  where id_dep = 30;
+
+Table created.
+
+SQL> select * from dept_30;
+
+        ID NUME                           DATA_ANG       PRIMA                                                                                                                                          
+---------- ------------------------------ --------- ----------                                                                                                                                          
+        30 ALLEN                          20-FEB-81        285                                                                                                                                          
+        30 WARD                           22-FEB-81        263                                                                                                                                          
+        30 MARTIN                         28-SEP-81        398                                                                                                                                          
+        30 BLAKE                          01-MAY-81        428                                                                                                                                          
+        30 TURNER                         08-SEP-81        225                                                                                                                                          
+        30 JAMES                          03-DEC-81        143                                                                                                                                          
+
+6 rows selected.
+
+SQL> select * from angajati where id_dep = 30;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+
+6 rows selected.
+
+SQL> create table exemplu2 (
+  2      col1 number(2) constraint nn_col1 not null,
+  3      col2 varchar2(20) NOT NULL
+  4  );
+
+Table created.
+
+SQL> create table ex3 (
+  2      col1 number(2) constraint uq_col1 unique,
+  3      col2 varchar2(20) unique
+  4  );
+
+Table created.
+
+SQL> create table ex4 (
+  2      col1 nunmber(2),
+  3      col2 varchar2(20),
+  4      constraint uq_col1_a unique(col1),
+  5      unique(col2)
+  6  );
+    col1 nunmber(2),
+                *
+ERROR at line 2:
+ORA-00907: missing right parenthesis 
+
+
+SQL> create table ex4 (
+  2      col1 number(2),
+  3      col2 varchar2(20),
+  4      constraint uq_col1_a unique(col1),
+  5      unique(col2)
+  6  );
+
+Table created.
+
+SQL> describe ex4
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ COL1                                                                                                                       NUMBER(2)
+ COL2                                                                                                                       VARCHAR2(20)
+
+SQL> create table ex5 (
+  2      col1 number(2),
+  3      col2 varchar2(20),
+  4      constraint uq_col12 unique(col1, col2)
+  5  );
+
+Table created.
+
+SQL> create table functii (
+  2      cod number(2) constraint pk_cod primar key,
+  3      functie varchar2(20),
+  4      data_vigoare date default sysdate
+  5  );
+    cod number(2) constraint pk_cod primar key,
+                  *
+ERROR at line 2:
+ORA-02253: constraint specification not allowed here 
+
+
+SQL> create table functii (
+  2      cod number(2) constraint pk_cod primary key,
+  3      functie varchar2(20),
+  4      data_vigoare date default sysdate
+  5  );
+
+Table created.
+
+SQL> describe functii
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ COD                                                                                                               NOT NULL NUMBER(2)
+ FUNCTIE                                                                                                                    VARCHAR2(20)
+ DATA_VIGOARE                                                                                                               DATE
+
+SQL> select * from functii;
+
+no rows selected
+
+SQL> create table persoane (
+  2      nume varchar2(20),
+  3      prenume varchar2(20),
+  4      serie_ci varchar2(2),
+  5      cod_ci number(6),
+  6      cnp number(13),
+  7      constraint pk_persoane primary key(serie_ci, cod_ci, cnp)
+  8  );
+
+Table created.
+
+SQL> describe persoane;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ NUME                                                                                                                       VARCHAR2(20)
+ PRENUME                                                                                                                    VARCHAR2(20)
+ SERIE_CI                                                                                                          NOT NULL VARCHAR2(2)
+ COD_CI                                                                                                            NOT NULL NUMBER(6)
+ CNP                                                                                                               NOT NULL NUMBER(13)
+
+SQL> create table angajati2 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang2
+  4          primary key,
+  5      id_sef number(4),
+  6      id_dep number(2)
+  7          constraint fk_id_dep2
+  8          references departamente(id_dep),
+  9      nume varchar2(20),
+ 10      functie varchar2(9),
+ 11      data_ang date,
+ 12      salariu number(7, 2),
+ 13      comision number(7, 2),
+ 14      constraint fk_id_sef2
+ 15          foreign key(id_sef)
+ 16          references angajati2(id_ang)
+ 17  );
+create table angajati2 (
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> 
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang2
+  4          primary key,
+  5      id_sef number(4),
+  6      id_dep number(2)
+  7          constraint fk_id_dep2
+  8          references departamente(id_dep),
+  9      nume varchar2(20),
+ 10      functie varchar2(9),
+ 11      data_ang date,
+ 12      salariu number(7, 2),
+ 13      comision number(7, 2),
+ 14      constraint fk_id_sef2
+ 15          foreign key(id_sef)
+ 16          references angajati3 (id_ang)
+ 17  );
+create table angajati3 (
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> drop table angajati3;
+
+Table dropped.
+
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang2
+  4          primary key,
+  5      id_sef number(4),
+  6      id_dep number(2)
+  7          constraint fk_id_dep2
+  8          references departamente(id_dep),
+  9      nume varchar2(20),
+ 10      functie varchar2(9),
+ 11      data_ang date,
+ 12      salariu number(7, 2),
+ 13      comision number(7, 2),
+ 14      constraint fk_id_sef2
+ 15          foreign key(id_sef)
+ 16          references angajati3 (id_ang)
+ 17  );
+        references departamente(id_dep),
+                                *
+ERROR at line 8:
+ORA-02270: no matching unique or primary key for this column-list 
+
+
+SQL> 
+SQL> select * from departamente;
+
+    ID_DEP DEN_DEP                        SEDIU                                                                                                                                                         
+---------- ------------------------------ --------------------                                                                                                                                          
+        10 ACCOUNTING                     NEW YORK                                                                                                                                                      
+        20 RESEARCH                       DALLAS                                                                                                                                                        
+        30 SALES                          CHICAGO                                                                                                                                                       
+        40 OPERATIONS                     BOSTON                                                                                                                                                        
+
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang3
+  4          primary key,
+  5      id_sef number(4),
+  6      id_dep number(2)
+  7          constraint fk_id_dep3
+  8          references departamente(id_dep),
+  9      nume varchar2(20),
+ 10      functie varchar2(9),
+ 11      data_ang date,
+ 12      salariu number(7, 2),
+ 13      comision number(7, 2),
+ 14      constraint fk_id_sef3
+ 15          foreign key(id_sef)
+ 16          references angajati3 (id_ang)
+ 17  );
+        references departamente(id_dep),
+                                *
+ERROR at line 8:
+ORA-02270: no matching unique or primary key for this column-list 
+
+
+SQL> describe departamente
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ ID_DEP                                                                                                            NOT NULL NUMBER(2)
+ DEN_DEP                                                                                                                    VARCHAR2(30)
+ SEDIU                                                                                                                      VARCHAR2(20)
+
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang3
+  4          primary key,
+  5      id_sef number(4),
+  6      id_dep number(2)
+  7          constraint fk_id_dep3
+  8          references deepartamente(id_dep),
+  9      nume varchar2(20),
+ 10      functie varchar2(9),
+ 11      data_ang date,
+ 12      salariu number(7, 2),
+ 13      comision number(7, 2),
+ 14      constraint fk_id_sef3
+ 15          foreign key(id_sef)
+ 16          references angajati3 (id_ang)
+ 17  );
+        references deepartamente(id_dep),
+                   *
+ERROR at line 8:
+ORA-00942: table or view does not exist 
+
+
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang3
+  4          primary key,
+  5      id_sef number(4),
+  6      id_dep number(2)
+  7          constraint fk_id_dep3
+  8          references departamente(id_dep),
+  9      nume varchar2(20),
+ 10      functie varchar2(9),
+ 11      data_ang date,
+ 12      salariu number(7, 2),
+ 13      comision number(7, 2),
+ 14      constraint fk_id_sef3
+ 15          foreign key(id_sef)
+ 16          references angajati3 (id_ang)
+ 17  );
+        references departamente(id_dep),
+                                *
+ERROR at line 8:
+ORA-02270: no matching unique or primary key for this column-list 
+
+
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang3
+  4          primary key,
+  5      id_sef number(4)
+  6          constraint fk_id_sef3 references angajati3(id_ang),
+  7      id_dep number(2)
+  8          constraint nn_id_dep3 not null,
+  9      nume varchar2(20)
+ 10          constraint ck_nume check=(nume = upper(nume)),
+ 11      functie varchar2(9),
+ 12      data_ang date default sysdate,
+ 13      salariu number(7, 2)
+ 14          constraint nn_salariu not null,
+ 15      comision number(7, 2),
+ 16      constraint fk_id_dep3 foreign key(id_dep)
+ 17          references departamente(id_dep),
+ 18      constraint ck_comision check(comision <= salariu)
+ 19  );
+        constraint ck_nume check=(nume = upper(nume)),
+                                *
+ERROR at line 10:
+ORA-00906: missing left parenthesis 
+
+
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang3
+  4          primary key,
+  5      id_sef number(4)
+  6          constraint fk_id_sef3 references angajati3(id_ang),
+  7      id_dep number(2)
+  8          constraint nn_id_dep3 not null,
+  9      nume varchar2(20)
+ 10          constraint ck_nume check(nume = upper(nume)),
+ 11      functie varchar2(9),
+ 12      data_ang date default sysdate,
+ 13      salariu number(7, 2)
+ 14          constraint nn_salariu not null,
+ 15      comision number(7, 2),
+ 16      constraint fk_id_dep3 foreign key(id_dep)
+ 17          references departamente(id_dep),
+ 18      constraint ck_comision check(comision <= salariu)
+ 19  );
+        references departamente(id_dep),
+                                *
+ERROR at line 17:
+ORA-02270: no matching unique or primary key for this column-list 
+
+
+SQL> describe departamente;
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ ID_DEP                                                                                                            NOT NULL NUMBER(2)
+ DEN_DEP                                                                                                                    VARCHAR2(30)
+ SEDIU                                                                                                                      VARCHAR2(20)
+
+SQL> SELECT cols.table_name, cols.column_name, cols.position, cons.status, cons.owner
+  2  FROM all_constraints cons, all_cons_columns cols
+  3  WHERE cols.table_name = 'DEPARTAMENTE'
+  4  AND cons.constraint_type = 'P'
+  5  AND cons.constraint_name = cols.constraint_name
+  6  AND cons.owner = cols.owner
+  7  ORDER BY cols.table_name, cols.position;
+
+no rows selected
+
+SQL> --alter table departamente add constraint pk_id_dep primary key(col1);
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang3
+  4          primary key,
+  5      id_sef number(4),
+  6      id_dep number(2)
+  7          constraint fk_id_dep3
+  8          references departamente(id_dep),
+  9      nume varchar2(20),
+ 10      functie varchar2(9),
+ 11      data_ang date,
+ 12      salariu number(7, 2),
+ 13      comision number(7, 2),
+ 14      constraint fk_id_sef3
+ 15          foreign key(id_sef)
+ 16          references angajati3 (id_ang)
+ 17  );
+        references departamente(id_dep),
+                                *
+ERROR at line 8:
+ORA-02270: no matching unique or primary key for this column-list 
+
+
+SQL> select constraint_name, constraint_type from user_constraints;
+
+CONSTRAINT_NAME                                                                                                                  C                                                                      
+-------------------------------------------------------------------------------------------------------------------------------- -                                                                      
+FK_DEPTNO                                                                                                                        R                                                                      
+FK_ANG__DEP2                                                                                                                     R                                                                      
+FK_ANG__ANG2                                                                                                                     R                                                                      
+FK_NOTE_DISC                                                                                                                     R                                                                      
+PK_DEPT                                                                                                                          P                                                                      
+PK_EMP                                                                                                                           P                                                                      
+SYS_C007464                                                                                                                      C                                                                      
+BIN$08IC0dJYSVuAkYqp70I27g==$0                                                                                                   C                                                                      
+SYS_C007466                                                                                                                      C                                                                      
+SYS_C007467                                                                                                                      C                                                                      
+PK_DEPARTAMENTE2                                                                                                                 P                                                                      
+PK_GRILA2                                                                                                                        P                                                                      
+PK_ANGAJATI2                                                                                                                     P                                                                      
+UQ_DENUMIRE2                                                                                                                     U                                                                      
+UQ_NUME2                                                                                                                         U                                                                      
+BIN$BIRMMHIiQLWQbjlTL5GVFA==$0                                                                                                   C                                                                      
+BIN$hug3gO8ORECF9/uKTTyFuA==$0                                                                                                   P                                                                      
+BIN$Q7faKwkqTUKXAz3JpdvRzA==$0                                                                                                   U                                                                      
+BIN$XBTc8tBYT/iYBCSr5QaQUA==$0                                                                                                   C                                                                      
+BIN$cIT+sD35R6qbU8WnRSAIAA==$0                                                                                                   P                                                                      
+SYS_C007482                                                                                                                      C                                                                      
+SYS_C007483                                                                                                                      C                                                                      
+PK_DISCIPLINE                                                                                                                    P                                                                      
+UK_DENUMIRE                                                                                                                      U                                                                      
+BIN$bortQhC2Q4Wq/ZJH5u3vYw==$0                                                                                                   C                                                                      
+BIN$XtHaXLXLTsCjP+GBFvqkQw==$0                                                                                                   C                                                                      
+BIN$b6VUNZ4bQdqdJN4CrAEdnw==$0                                                                                                   C                                                                      
+BIN$M8jR/H2rTqOGjkBzzPUrFw==$0                                                                                                   P                                                                      
+SYS_C007491                                                                                                                      C                                                                      
+SYS_C007492                                                                                                                      C                                                                      
+SYS_C007493                                                                                                                      C                                                                      
+SYS_C007494                                                                                                                      C                                                                      
+PK_NOTE                                                                                                                          P                                                                      
+BIN$PWf/IGV1TeOzJ1o+iI6Vlg==$0                                                                                                   C                                                                      
+SYS_C007502                                                                                                                      C                                                                      
+SYS_C007571                                                                                                                      C                                                                      
+NN_COL1                                                                                                                          C                                                                      
+SYS_C007573                                                                                                                      C                                                                      
+UQ_COL1                                                                                                                          U                                                                      
+SYS_C007575                                                                                                                      U                                                                      
+UQ_COL1_A                                                                                                                        U                                                                      
+SYS_C007577                                                                                                                      U                                                                      
+UQ_COL12                                                                                                                         U                                                                      
+PK_COD                                                                                                                           P                                                                      
+PK_PERSOANE                                                                                                                      P                                                                      
+
+45 rows selected.
+
+SQL> select table_name, constraint_name, constraint_type from user_constraints;
+
+TABLE_NAME                                                                                                                                                                                              
+--------------------------------------------------------------------------------------------------------------------------------                                                                        
+CONSTRAINT_NAME                                                                                                                  C                                                                      
+-------------------------------------------------------------------------------------------------------------------------------- -                                                                      
+EMP                                                                                                                                                                                                     
+FK_DEPTNO                                                                                                                        R                                                                      
+                                                                                                                                                                                                        
+ANGAJATI2                                                                                                                                                                                               
+FK_ANG__DEP2                                                                                                                     R                                                                      
+                                                                                                                                                                                                        
+ANGAJATI2                                                                                                                                                                                               
+FK_ANG__ANG2                                                                                                                     R                                                                      
+                                                                                                                                                                                                        
+NOTE                                                                                                                                                                                                    
+FK_NOTE_DISC                                                                                                                     R                                                                      
+                                                                                                                                                                                                        
+DEPT                                                                                                                                                                                                    
+PK_DEPT                                                                                                                          P                                                                      
+                                                                                                                                                                                                        
+EMP                                                                                                                                                                                                     
+PK_EMP                                                                                                                           P                                                                      
+                                                                                                                                                                                                        
+DEPARTAMENTE                                                                                                                                                                                            
+SYS_C007464                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+BIN$hMP0nVh2Q7eeEFpqxIyq0g==$0                                                                                                                                                                          
+BIN$08IC0dJYSVuAkYqp70I27g==$0                                                                                                   C                                                                      
+                                                                                                                                                                                                        
+DEPARTAMENTE2                                                                                                                                                                                           
+SYS_C007466                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+ANGAJATI2                                                                                                                                                                                               
+SYS_C007467                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+DEPARTAMENTE2                                                                                                                                                                                           
+PK_DEPARTAMENTE2                                                                                                                 P                                                                      
+                                                                                                                                                                                                        
+GRILA_SALARIU2                                                                                                                                                                                          
+PK_GRILA2                                                                                                                        P                                                                      
+                                                                                                                                                                                                        
+ANGAJATI2                                                                                                                                                                                               
+PK_ANGAJATI2                                                                                                                     P                                                                      
+                                                                                                                                                                                                        
+DEPARTAMENTE2                                                                                                                                                                                           
+UQ_DENUMIRE2                                                                                                                     U                                                                      
+                                                                                                                                                                                                        
+ANGAJATI2                                                                                                                                                                                               
+UQ_NUME2                                                                                                                         U                                                                      
+                                                                                                                                                                                                        
+BIN$af5NsfF6QpO2J9ptGK3wLg==$0                                                                                                                                                                          
+BIN$BIRMMHIiQLWQbjlTL5GVFA==$0                                                                                                   C                                                                      
+                                                                                                                                                                                                        
+BIN$af5NsfF6QpO2J9ptGK3wLg==$0                                                                                                                                                                          
+BIN$hug3gO8ORECF9/uKTTyFuA==$0                                                                                                   P                                                                      
+                                                                                                                                                                                                        
+BIN$af5NsfF6QpO2J9ptGK3wLg==$0                                                                                                                                                                          
+BIN$Q7faKwkqTUKXAz3JpdvRzA==$0                                                                                                   U                                                                      
+                                                                                                                                                                                                        
+BIN$DLW2bBeyQsGYLyCG2BQVvw==$0                                                                                                                                                                          
+BIN$XBTc8tBYT/iYBCSr5QaQUA==$0                                                                                                   C                                                                      
+                                                                                                                                                                                                        
+BIN$DLW2bBeyQsGYLyCG2BQVvw==$0                                                                                                                                                                          
+BIN$cIT+sD35R6qbU8WnRSAIAA==$0                                                                                                   P                                                                      
+                                                                                                                                                                                                        
+DISCIPLINE                                                                                                                                                                                              
+SYS_C007482                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+DISCIPLINE                                                                                                                                                                                              
+SYS_C007483                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+DISCIPLINE                                                                                                                                                                                              
+PK_DISCIPLINE                                                                                                                    P                                                                      
+                                                                                                                                                                                                        
+DISCIPLINE                                                                                                                                                                                              
+UK_DENUMIRE                                                                                                                      U                                                                      
+                                                                                                                                                                                                        
+BIN$UB1WYdi8TByWvtnBa12whw==$0                                                                                                                                                                          
+BIN$bortQhC2Q4Wq/ZJH5u3vYw==$0                                                                                                   C                                                                      
+                                                                                                                                                                                                        
+BIN$UB1WYdi8TByWvtnBa12whw==$0                                                                                                                                                                          
+BIN$XtHaXLXLTsCjP+GBFvqkQw==$0                                                                                                   C                                                                      
+                                                                                                                                                                                                        
+BIN$UB1WYdi8TByWvtnBa12whw==$0                                                                                                                                                                          
+BIN$b6VUNZ4bQdqdJN4CrAEdnw==$0                                                                                                   C                                                                      
+                                                                                                                                                                                                        
+BIN$UB1WYdi8TByWvtnBa12whw==$0                                                                                                                                                                          
+BIN$M8jR/H2rTqOGjkBzzPUrFw==$0                                                                                                   P                                                                      
+                                                                                                                                                                                                        
+NOTE                                                                                                                                                                                                    
+SYS_C007491                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+NOTE                                                                                                                                                                                                    
+SYS_C007492                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+NOTE                                                                                                                                                                                                    
+SYS_C007493                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+NOTE                                                                                                                                                                                                    
+SYS_C007494                                                                                                                      C                                                                      
+
+TABLE_NAME                                                                                                                                                                                              
+--------------------------------------------------------------------------------------------------------------------------------                                                                        
+CONSTRAINT_NAME                                                                                                                  C                                                                      
+-------------------------------------------------------------------------------------------------------------------------------- -                                                                      
+                                                                                                                                                                                                        
+NOTE                                                                                                                                                                                                    
+PK_NOTE                                                                                                                          P                                                                      
+                                                                                                                                                                                                        
+BIN$XDi2SeA2Rzmhco8Ue3y34g==$0                                                                                                                                                                          
+BIN$PWf/IGV1TeOzJ1o+iI6Vlg==$0                                                                                                   C                                                                      
+                                                                                                                                                                                                        
+ANGAJATI                                                                                                                                                                                                
+SYS_C007502                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+DEPT_30                                                                                                                                                                                                 
+SYS_C007571                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+EXEMPLU2                                                                                                                                                                                                
+NN_COL1                                                                                                                          C                                                                      
+                                                                                                                                                                                                        
+EXEMPLU2                                                                                                                                                                                                
+SYS_C007573                                                                                                                      C                                                                      
+                                                                                                                                                                                                        
+EX3                                                                                                                                                                                                     
+UQ_COL1                                                                                                                          U                                                                      
+                                                                                                                                                                                                        
+EX3                                                                                                                                                                                                     
+SYS_C007575                                                                                                                      U                                                                      
+                                                                                                                                                                                                        
+EX4                                                                                                                                                                                                     
+UQ_COL1_A                                                                                                                        U                                                                      
+                                                                                                                                                                                                        
+EX4                                                                                                                                                                                                     
+SYS_C007577                                                                                                                      U                                                                      
+                                                                                                                                                                                                        
+EX5                                                                                                                                                                                                     
+UQ_COL12                                                                                                                         U                                                                      
+                                                                                                                                                                                                        
+FUNCTII                                                                                                                                                                                                 
+PK_COD                                                                                                                           P                                                                      
+                                                                                                                                                                                                        
+PERSOANE                                                                                                                                                                                                
+PK_PERSOANE                                                                                                                      P                                                                      
+                                                                                                                                                                                                        
+
+45 rows selected.
+
+SQL> alter table departamente add constraint pk_id_dep primary key (id_dep);
+
+Table altered.
+
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang3
+  4          primary key,
+  5      id_sef number(4),
+  6      id_dep number(2)
+  7          constraint fk_id_dep3
+  8          references departamente(id_dep),
+  9      nume varchar2(20),
+ 10      functie varchar2(9),
+ 11      data_ang date,
+ 12      salariu number(7, 2),
+ 13      comision number(7, 2),
+ 14      constraint fk_id_sef3
+ 15          foreign key(id_sef)
+ 16          references angajati3 (id_ang)
+ 17  );
+
+Table created.
+
+SQL> describe angajati3
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ ID_ANG                                                                                                            NOT NULL NUMBER(4)
+ ID_SEF                                                                                                                     NUMBER(4)
+ ID_DEP                                                                                                                     NUMBER(2)
+ NUME                                                                                                                       VARCHAR2(20)
+ FUNCTIE                                                                                                                    VARCHAR2(9)
+ DATA_ANG                                                                                                                   DATE
+ SALARIU                                                                                                                    NUMBER(7,2)
+ COMISION                                                                                                                   NUMBER(7,2)
+
+SQL> create table angajati3 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang3
+  4          primary key,
+  5      id_sef number(4)
+  6          constraint fk_id_sef3 references angajati3(id_ang),
+  7      id_dep number(2)
+  8          constraint nn_id_dep3 not null,
+  9      nume varchar2(20)
+ 10          constraint ck_nume check(nume = upper(nume)),
+ 11      functie varchar2(9),
+ 12      data_ang date default sysdate,
+ 13      salariu number(7, 2)
+ 14          constraint nn_salariu not null,
+ 15      comision number(7, 2),
+ 16      constraint fk_id_dep3 foreign key(id_dep)
+ 17          references departamente(id_dep),
+ 18      constraint ck_comision check(comision <= salariu)
+ 19  );
+create table angajati3 (
+             *
+ERROR at line 1:
+ORA-00955: name is already used by an existing object 
+
+
+SQL> 
+SQL> create table angajati4 (
+  2      id_ang number(4)
+  3          constraint pk_id_ang4
+  4          primary key,
+  5      id_sef number(4)
+  6          constraint fk_id_sef4 references angajati4(id_ang),
+  7      id_dep number(2)
+  8          constraint nn_id_dep4 not null,
+  9      nume varchar2(20)
+ 10          constraint ck_nume check(nume = upper(nume)),
+ 11      functie varchar2(9),
+ 12      data_ang date default sysdate,
+ 13      salariu number(7, 2)
+ 14          constraint nn_salariu not null,
+ 15      comision number(7, 2),
+ 16      constraint fk_id_dep4 foreign key(id_dep)
+ 17          references departamente(id_dep),
+ 18      constraint ck_comision check(comision <= salariu)
+ 19  );
+
+Table created.
+
+SQL> 
+SQL> describe angajati4
+ Name                                                                                                              Null?    Type
+ ----------------------------------------------------------------------------------------------------------------- -------- ----------------------------------------------------------------------------
+ ID_ANG                                                                                                            NOT NULL NUMBER(4)
+ ID_SEF                                                                                                                     NUMBER(4)
+ ID_DEP                                                                                                            NOT NULL NUMBER(2)
+ NUME                                                                                                                       VARCHAR2(20)
+ FUNCTIE                                                                                                                    VARCHAR2(9)
+ DATA_ANG                                                                                                                   DATE
+ SALARIU                                                                                                           NOT NULL NUMBER(7,2)
+ COMISION                                                                                                                   NUMBER(7,2)
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+      1111 IONESCU                        CLERK                                          12345                                                                                                          
+
+15 rows selected.
+
+SQL> select avg(salariu) from angajati;
+
+AVG(SALARIU)                                                                                                                                                                                            
+------------                                                                                                                                                                                            
+        2758                                                                                                                                                                                            
+
+SQL> select avg(salariu) from angajati group by id_dep;
+
+AVG(SALARIU)                                                                                                                                                                                            
+------------                                                                                                                                                                                            
+  1566.66667                                                                                                                                                                                            
+  2916.66667                                                                                                                                                                                            
+       12345                                                                                                                                                                                            
+        2175                                                                                                                                                                                            
+
+SQL> select
+  2      a1.id_dep,
+  3      b.sal_med_dept sal_med_comp,
+  4      a1.nume,
+  5      a1.functie,
+  6      a1.salariu
+  7  from
+  8      angajati a1,
+  9      (SELECT id_dep, avg (a1.salariu) sal_med_dept
+ 10      FROM angajati a
+ 11      group by id_dep) b,
+ 12  where
+ 13      a1.id_dep = b.id_dep AND
+ 14      a1.salariu > b.sal_med_depart;
+where
+*
+ERROR at line 12:
+ORA-00903: invalid table name 
+
+
+SQL> select
+  2      a1.id_dep,
+  3      b.sal_med_dept sal_med_comp,
+  4      a1.nume,
+  5      a1.functie,
+  6      a1.salariu
+  7  from
+  8      angajati a1,
+  9      (SELECT id_dep, avg (a1.salariu) sal_med_dept
+ 10      FROM angajati a
+ 11      group by id_dep) b
+ 12  where
+ 13      a1.id_dep = b.id_dep AND
+ 14      a1.salariu > b.sal_med_depart;
+    (SELECT id_dep, avg (a1.salariu) sal_med_dept
+                         *
+ERROR at line 9:
+ORA-00904: "A1"."SALARIU": invalid identifier 
+
+
+SQL> select
+  2      a1.id_dep,
+  3      b.sal_med_dept sal_med_comp,
+  4      a1.nume,
+  5      a1.functie,
+  6      a1.salariu
+  7  from
+  8      angajati a1,
+  9      (SELECT id_dep, avg (a.salariu) sal_med_dept
+ 10      FROM angajati a
+ 11      group by id_dep) b
+ 12  where
+ 13      a1.id_dep = b.id_dep AND
+ 14      a1.salariu > b.sal_med_depart;
+    a1.salariu > b.sal_med_depart
+                 *
+ERROR at line 14:
+ORA-00904: "B"."SAL_MED_DEPART": invalid identifier 
+
+
+SQL> select
+  2      a1.id_dep,
+  3      b.sal_med_dept sal_med_comp,
+  4      a1.nume,
+  5      a1.functie,
+  6      a1.salariu
+  7  from
+  8      angajati a1,
+  9      (SELECT id_dep, avg (a.salariu) sal_med_dept
+ 10      FROM angajati a
+ 11      group by id_dep) b
+ 12  where
+ 13      a1.id_dep = b.id_dep AND
+ 14      a1.salariu > b.sal_med_dept;
+
+    ID_DEP SAL_MED_COMP NUME                           FUNCTIE                 SALARIU                                                                                                                  
+---------- ------------ ------------------------------ -------------------- ----------                                                                                                                  
+        30   1566.66667 ALLEN                          SALESMAN                   1600                                                                                                                  
+        20         2175 JONES                          MANAGER                    2975                                                                                                                  
+        30   1566.66667 BLAKE                          MANAGER                    2850                                                                                                                  
+        20         2175 SCOTT                          ANALYST                    3000                                                                                                                  
+        10   2916.66667 KING                           PRESIDENT                  5000                                                                                                                  
+        20         2175 FORD                           ANALYST                    3000                                                                                                                  
+
+6 rows selected.
+
+SQL> select
+  2      SUM(a1.salariu)
+  3  from
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  group by id_dep;
+group by id_dep
+         *
+ERROR at line 7:
+ORA-00918: column ambiguously defined 
+
+
+SQL> select
+  2      SUM(a1.salariu)
+  3  from
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  group by a1.id_dep;
+
+SUM(A1.SALARIU)                                                                                                                                                                                         
+---------------                                                                                                                                                                                         
+           9400                                                                                                                                                                                         
+           3750                                                                                                                                                                                         
+          10875                                                                                                                                                                                         
+
+SQL> select
+  2      MAX(SUM(a1.salariu))
+  3  from
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  group by a1.id_dep;
+
+MAX(SUM(A1.SALARIU))                                                                                                                                                                                    
+--------------------                                                                                                                                                                                    
+               10875                                                                                                                                                                                    
+
+SQL> select
+  2      id_dep,
+  3      MAX(SUM(a1.salariu))
+  4  from
+  5      angajati a1
+  6          INNER JOIN angajati a2
+  7                  ON a1.id_sef = a2.id_ang
+  8  group by a1.id_dep;
+    id_dep,
+    *
+ERROR at line 2:
+ORA-00918: column ambiguously defined 
+
+
+SQL> select salariu = (SELECT max(salariu)
+  2                  FROM angajati);
+select salariu = (SELECT max(salariu)
+               *
+ERROR at line 1:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> select
+  2      a1.id_dep,
+  3      MAX(SUM(a1.salariu))
+  4  from
+  5      angajati a1
+  6          INNER JOIN angajati a2
+  7                  ON a1.id_sef = a2.id_ang
+  8  group by a1.id_dep;
+    a1.id_dep,
+    *
+ERROR at line 2:
+ORA-00937: not a single-group group function 
+
+
+SQL> select
+  2      MAX(SUM(a1.salariu))
+  3  from
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  group by a1.id_dep;
+
+MAX(SUM(A1.SALARIU))                                                                                                                                                                                    
+--------------------                                                                                                                                                                                    
+               10875                                                                                                                                                                                    
+
+SQL> select
+  2      id_dep,
+  3      MAX(SUM(a1.salariu)) max_sal
+  4  from
+  5      angajati a1
+  6          INNER JOIN angajati a2
+  7                  ON a1.id_sef = a2.id_ang;
+    id_dep,
+    *
+ERROR at line 2:
+ORA-00918: column ambiguously defined 
+
+
+SQL> select
+  2      a1.id_dep,
+  3      MAX(SUM(a1.salariu)) max_sal
+  4  from
+  5      angajati a1
+  6          INNER JOIN angajati a2
+  7                  ON a1.id_sef = a2.id_ang;
+    MAX(SUM(a1.salariu)) max_sal
+        *
+ERROR at line 3:
+ORA-00978: nested group function without GROUP BY 
+
+
+SQL> select
+  2      SUM(a1.salariu) max_sal
+  3  from
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  group by a1.id_dep;
+
+   MAX_SAL                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+      9400                                                                                                                                                                                              
+      3750                                                                                                                                                                                              
+     10875                                                                                                                                                                                              
+
+SQL> select
+  2      SUM(a2.salariu) max_sal
+  3  from
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  group by a1.id_dep;
+
+   MAX_SAL                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+     19250                                                                                                                                                                                              
+      7450                                                                                                                                                                                              
+     16950                                                                                                                                                                                              
+
+SQL> select
+  2      SUM(a1.salariu) max_sal
+  3  from
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  group by a1.id_dep;
+
+   MAX_SAL                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+      9400                                                                                                                                                                                              
+      3750                                                                                                                                                                                              
+     10875                                                                                                                                                                                              
+
+SQL> select * from angajati;
+
+    ID_ANG NUME                           FUNCTIE                  ID_SEF DATA_ANG     SALARIU   COMISION     ID_DEP                                                                                    
+---------- ------------------------------ -------------------- ---------- --------- ---------- ---------- ----------                                                                                    
+      7369 SMITH                          CLERK                      7902 17-DEC-80        800                    20                                                                                    
+      7499 ALLEN                          SALESMAN                   7698 20-FEB-81       1600        300         30                                                                                    
+      7521 WARD                           SALESMAN                   7698 22-FEB-81       1250        500         30                                                                                    
+      7566 JONES                          MANAGER                    7839 02-APR-81       2975                    20                                                                                    
+      7654 MARTIN                         SALESMAN                   7698 28-SEP-81       1250       1400         30                                                                                    
+      7698 BLAKE                          MANAGER                    7839 01-MAY-81       2850                    30                                                                                    
+      7782 CLARK                          MANAGER                    7839 09-JUN-81       2450                    10                                                                                    
+      7788 SCOTT                          ANALYST                    7566 19-APR-87       3000                    20                                                                                    
+      7839 KING                           PRESIDENT                       17-NOV-81       5000                    10                                                                                    
+      7844 TURNER                         SALESMAN                   7698 08-SEP-81       1500          0         30                                                                                    
+      7876 ADAMS                          CLERK                      7788 23-MAY-87       1100                    20                                                                                    
+      7900 JAMES                          CLERK                      7698 03-DEC-81        950                    30                                                                                    
+      7902 FORD                           ANALYST                    7566 03-DEC-81       3000                    20                                                                                    
+      7934 MILLER                         CLERK                      7782 23-JAN-82       1300                    10                                                                                    
+      1111 IONESCU                        CLERK                                          12345                                                                                                          
+
+15 rows selected.
+
+SQL> delete from angajati where id_ang = 1111;
+
+1 row deleted.
+
+SQL> select
+  2      SUM(a1.salariu) max_sal
+  3  from
+  4      angajati a1
+  5          INNER JOIN angajati a2
+  6                  ON a1.id_sef = a2.id_ang
+  7  group by a1.id_dep;
+
+   MAX_SAL                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+      9400                                                                                                                                                                                              
+      3750                                                                                                                                                                                              
+     10875                                                                                                                                                                                              
+
+SQL> select
+  2      id_dep, SUM(salariu) suma_sal
+  3  from angajati
+  4  where id_ang in (select id_sef from angajati)
+  5  group by a1.id_dep;
+group by a1.id_dep
+         *
+ERROR at line 5:
+ORA-00904: "A1"."ID_DEP": invalid identifier 
+
+
+SQL> select
+  2      id_dep, SUM(salariu) suma_sal
+  3  from angajati
+  4  where id_ang in (select id_sef from angajati)
+  5  group by id_dep;
+
+    ID_DEP   SUMA_SAL                                                                                                                                                                                   
+---------- ----------                                                                                                                                                                                   
+        30       2850                                                                                                                                                                                   
+        10       7450                                                                                                                                                                                   
+        20       8975                                                                                                                                                                                   
+
+SQL> select
+  2      id_dep, MAX(suma_sal)
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) suma_sal
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_sal;
+    id_dep, MAX(suma_sal)
+    *
+ERROR at line 2:
+ORA-00937: not a single-group group function 
+
+
+SQL> select
+  2      suma_salarii.id_dep, MAX(suma_salarii.suma_sal)
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) suma_sal
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii;
+    suma_salarii.id_dep, MAX(suma_salarii.suma_sal)
+    *
+ERROR at line 2:
+ORA-00937: not a single-group group function 
+
+
+SQL> select
+  2      MAX(suma_salarii.suma_sal)
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) suma_sal
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii;
+
+MAX(SUMA_SALARII.SUMA_SAL)                                                                                                                                                                              
+--------------------------                                                                                                                                                                              
+                      8975                                                                                                                                                                              
+
+SQL> select
+  2      suma_salarii.id_dep, MAX(suma_salarii.suma_sal)
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) suma_sal
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii;
+    suma_salarii.id_dep, MAX(suma_salarii.suma_sal)
+    *
+ERROR at line 2:
+ORA-00937: not a single-group group function 
+
+
+SQL> group by suma_salarii.id_dep;
+SP2-0734: unknown command beginning "group by s..." - rest of line ignored.
+SQL> select
+  2      suma_salarii.id_dep, MAX(suma_salarii.suma_sal)
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) suma_sal
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii;
+    suma_salarii.id_dep, MAX(suma_salarii.suma_sal)
+    *
+ERROR at line 2:
+ORA-00937: not a single-group group function 
+
+
+SQL> group by id_dep;
+SP2-0734: unknown command beginning "group by i..." - rest of line ignored.
+SQL> select
+  2      suma_salarii.id_dep, MAX(suma_salarii.suma_sal)
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) suma_sal
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii
+  9  group by id_dep;
+
+    ID_DEP MAX(SUMA_SALARII.SUMA_SAL)                                                                                                                                                                   
+---------- --------------------------                                                                                                                                                                   
+        30                       2850                                                                                                                                                                   
+        10                       7450                                                                                                                                                                   
+        20                       8975                                                                                                                                                                   
+
+SQL> select
+  2      suma_salarii.id_dep, MAX(suma_salarii.suma_sal)
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) suma_sal
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii
+  9  group by suma_salarii.id_dep;
+
+    ID_DEP MAX(SUMA_SALARII.SUMA_SAL)                                                                                                                                                                   
+---------- --------------------------                                                                                                                                                                   
+        30                       2850                                                                                                                                                                   
+        10                       7450                                                                                                                                                                   
+        20                       8975                                                                                                                                                                   
+
+SQL> select
+  2      suma_salarii.id_dep, MAX(suma_salarii.suma_sal) max
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) suma_sal
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii
+  9  group by max;
+group by max
+         *
+ERROR at line 9:
+ORA-00904: "MAX": invalid identifier 
+
+
+SQL> select
+  2      suma_salarii.id_dep, MAX(suma_salarii.suma_sal) maxii
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) suma_sal
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii
+  9  group by maxii;
+group by maxii
+         *
+ERROR at line 9:
+ORA-00904: "MAXII": invalid identifier 
+
+
+SQL> select
+  2      id_dep
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) sal_sefi
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii
+  9  where suma_salarii.sal_sefi = (select max(sal_sefi)
+ 10                                  from suma_salarii);
+                                from suma_salarii)
+                                     *
+ERROR at line 10:
+ORA-00942: table or view does not exist 
+
+
+SQL> select
+  2          id_dep, SUM(salariu) sal_sefi
+  3      from angajati
+  4      where id_ang in (select id_sef from angajati)
+  5      group by id_dep
+  6  ;
+
+    ID_DEP   SAL_SEFI                                                                                                                                                                                   
+---------- ----------                                                                                                                                                                                   
+        30       2850                                                                                                                                                                                   
+        10       7450                                                                                                                                                                                   
+        20       8975                                                                                                                                                                                   
+
+SQL> select
+  2      id_dep
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) sal_sefi
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii;
+
+    ID_DEP                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+        30                                                                                                                                                                                              
+        10                                                                                                                                                                                              
+        20                                                                                                                                                                                              
+
+SQL> select
+  2      id_dep
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) sal_sefi
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii
+  9  where sal_sefi = (select max(sal_sefi)
+ 10                                  from suma_salarii);
+                                from suma_salarii)
+                                     *
+ERROR at line 10:
+ORA-00942: table or view does not exist 
+
+
+SQL> select
+  2      id_dep
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) sal_sefi
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep)
+  9  where sal_sefi =
+ 10      (select max(sal_sefi) from
+ 11          (select
+ 12          id_dep, SUM(salariu) sal_sefi
+ 13      from angajati
+ 14      where id_ang in (select id_sef from angajati)
+ 15      group by id_dep));
+
+    ID_DEP                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+        20                                                                                                                                                                                              
+
+SQL> select
+  2      id_dep
+  3  from
+  4      (select
+  5          id_dep, SUM(salariu) sal_sefi
+  6      from angajati
+  7      where id_ang in (select id_sef from angajati)
+  8      group by id_dep) suma_salarii;
+
+    ID_DEP                                                                                                                                                                                              
+----------                                                                                                                                                                                              
+        30                                                                                                                                                                                              
+        10                                                                                                                                                                                              
+        20                                                                                                                                                                                              
+
+SQL> where suma_salarii.sal_sefi =
+SP2-0734: unknown command beginning "where suma..." - rest of line ignored.
+SQL>     (select max(sal_sefi) from
+  2          (select
+  3          id_dep, SUM(salariu) sal_sefi
+  4      from angajati
+  5      where id_ang in (select id_sef from angajati)
+  6      group by id_dep));
+

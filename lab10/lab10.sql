@@ -29,7 +29,7 @@ create table studenti (
     cnp number(13),
     nume varchar (30),
     data_nasterii date,
-    an_univ_number(4) default 2019,
+    an_univ number(4) default 2019,
     medie_admitere number(4, 2),
     discip_oblig varchar2(20) default 'Matematica',
     discip_opt varchar(20) default 'Fizica',
@@ -40,7 +40,7 @@ create table studenti (
 -- ex 2
 create table dept_20
 as 
-select id_Dep, nume, data_ang, salariu + nvl(comision, 0) venit
+select id_dep, nume, data_ang, salariu + nvl(comision, 0) venit
 from angajati
 where id_dep = 20;
 
@@ -75,7 +75,7 @@ create table ex3 (
 );
 
 create table ex4 (
-    col1 nunmber(2),
+    col1 number(2),
     col2 varchar2(20),
     constraint uq_col1_a unique(col1),
     unique(col2)
@@ -93,7 +93,7 @@ create table ex5 (
 -- un cod unic
 
 create table functii (
-    cod number(2) constraint pk_cod primar key,
+    cod number(2) constraint pk_cod primary key,
     functie varchar2(20),
     data_vigoare date default sysdate
 );
@@ -117,23 +117,25 @@ create table persoane (
 -- ex 6
 -- tabela angajati - sa se adauge PK si FK
 
-create table angajati2 (
+create table angajati3 (
     id_ang number(4)
-        constraint pk_id_ang2
+        constraint pk_id_ang3
         primary key,
     id_sef number(4),
     id_dep number(2)
-        constraint fk_id_dep2
+        constraint fk_id_dep3
         references departamente(id_dep),
     nume varchar2(20),
     functie varchar2(9),
     data_ang date,
     salariu number(7, 2),
     comision number(7, 2),
-    constraint fk_id_sef2
+    constraint fk_id_sef3
         foreign key(id_sef)
-        references angajati2(id_ang)
+        references angajati3 (id_ang)
 );
+
+alter table departamente add constraint pk_id_dep primary key (id_dep);
 
 -- ex 7
 -- tabela angajati cu CHECK:
@@ -141,26 +143,35 @@ create table angajati2 (
 -- comisionul nu depaseste salariul
 -- numele este scris doar cu litere mari
 
-create table angajati3 (
+create table angajati4 (
     id_ang number(4)
-        constraint pk_id_ang3
+        constraint pk_id_ang4
         primary key,
     id_sef number(4)
-        constraint fk_id_sef3 references angajati3(id_ang),
+        constraint fk_id_sef4 references angajati4(id_ang),
     id_dep number(2)
-        constraint nn_id_dep3 not null,
+        constraint nn_id_dep4 not null,
     nume varchar2(20)
-        constraint ck_nume check=(nume = upper(nume)),
+        constraint ck_nume check(nume = upper(nume)),
     functie varchar2(9),
     data_ang date default sysdate,
     salariu number(7, 2)
         constraint nn_salariu not null,
     comision number(7, 2),
-    constraint fk_id_dep3 foreign key(id_dep)
+    constraint fk_id_dep4 foreign key(id_dep)
         references departamente(id_dep),
     constraint ck_comision check(comision <= salariu)
 );
 
+
+
+SELECT cols.table_name, cols.column_name, cols.position, cons.status, cons.owner
+FROM all_constraints cons, all_cons_columns cols
+WHERE cols.table_name = 'DEPARTAMENTE'
+AND cons.constraint_type = 'P'
+AND cons.constraint_name = cols.constraint_name
+AND cons.owner = cols.owner
+ORDER BY cols.table_name, cols.position;
 
 --- alter table examples
 
@@ -372,12 +383,89 @@ drop view view_dept;
 
 
 
+-- exercitiu individual
+
+
+create table salarii (
+    id_depart,
+    sal_med_depart,
+    nume_ang not null,
+    job_ang,
+    salariu_ang
+)
+as
+select
+    a1.id_dep,
+    medie_dept.sal_med_dept sal_med_depart,
+    a1.nume,
+    a1.functie,
+    a1.salariu
+from
+    angajati a1,
+    (SELECT id_dep, avg (a.salariu) sal_med_dept
+    FROM angajati a
+    group by id_dep) medie_dept
+where
+    a1.id_dep =
+        (select
+        id_dep
+        from
+            (select
+                id_dep, SUM(salariu) sal_sefi
+            from angajati
+            where id_ang in (select id_sef from angajati)
+            group by id_dep) suma_salarii
+        where suma_salarii.sal_sefi =
+            (select max(sal_sefi) from
+                (select
+                    id_dep, SUM(salariu) sal_sefi
+                from angajati
+                where id_ang in (select id_sef from angajati)
+            group by id_dep)))
+    AND
+    a1.id_dep = medie_dept.id_dep AND
+    a1.salariu > medie_dept.sal_med_dept;
 
 
 
 
+-- id_Dep  si suma_salariilor sefilor
+select
+    id_dep, SUM(salariu) suma_sal
+from angajati
+where id_ang in (select id_sef from angajati)
+group by id_dep;
+
+-- departamentul cu suma maxima
+select
+    id_dep
+from
+    (select
+        id_dep, SUM(salariu) sal_sefi
+    from angajati
+    where id_ang in (select id_sef from angajati)
+    group by id_dep) suma_salarii
+where suma_salarii.sal_sefi =
+    (select max(sal_sefi) from
+        (select
+        id_dep, SUM(salariu) sal_sefi
+    from angajati
+    where id_ang in (select id_sef from angajati)
+    group by id_dep));
 
 
+-------------------nu merge peentru ca nu gasesste tabelul-------------------
+select
+    id_dep
+from
+    (select
+        id_dep, SUM(salariu) sal_sefi
+    from angajati
+    where id_ang in (select id_sef from angajati)
+    group by id_dep) suma_salarii
+where suma_salarii.sal_sefi = (select max(sal_sefi)
+                                from suma_salarii);
+-------------------nu merge pentru ca nu gasesste tabelul-------------------
 
 
 
