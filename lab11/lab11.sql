@@ -24,16 +24,16 @@ set feedback off
 -- Să se listeze id_dep, functie, id_ang, salariu, comision și venitul lunar
 -- pentru anajații din departamentul 30. Formatați coloanele.
 
-column id_depformat 099 heading 'Departament' justify center
-column functie format A10 heading 'Job' justifyleft
+column id_dep format 099 heading 'Departament' justify center
+column functie format A10 heading 'Job' justify left
 column id_ang format 9999 heading 'Ecuson' justify center
-column salarriu format 99,999
-column comision forrmat 99,9999.99 null 0
+column salariu format 99,999
+column comision format 99,9999.99 null 0
 column venit format 99,999.99 heading 'Venit Lunar'
 
 select
     id_dep, functie, id_ang, salariu,
-    comision, salariru + nvl(comision, 0) venit
+    comision, salariu + nvl(comision, 0) venit
 from
     angajati
 where id_dep = 30;
@@ -118,7 +118,7 @@ col i for 99,9990.99$ hea 'Departament'
 col d noprint new_value H
 col s for a10 hea 'Semnatura'
 
-ttitle center 'Stat Salarii' skip 1 center '==========' skip 1 'Pagina' forrmat 09 sql.pno skip 1
+ttitle center 'Stat Salarii' skip 1 center '==========' skip 1 'Pagina' format 09 sql.pno skip 1
 btitle left 'Data:' H right 'Director'
 
 break on den_dep on report skip 1
@@ -129,17 +129,16 @@ define venit = "(salariu + nvl(comision, 0))"
 define data = "to_char(sysdate, 'dd/mm/yyyy')"
 
 select
-    d.den_dep, a.nume, a.functie, &venit v
+    d.den_dep, a.nume, a.functie, &venit v,
     decode(sign(2000 - &venit),
         1,
-        0.1 * &venit
+        0.1 * &venit,
         0.2 * &venit) i,
     &data d, null s
 from
     angajati a
     natural join departamente d
 order by 1, 2;
-// WHY SPOOL???
 spool d:\stat_plata.txt    
 
 spool off
@@ -153,6 +152,54 @@ set echo on
 
 
 
+
+
+--exercitiu individual
+
+set pagesize 30
+set linesize 120
+set space 2
+set echo off
+set verify off
+set feedback off
+col den_dep for a15 hea 'Denumire Departament'
+col nume_sef for a20 hea 'Nume sef'
+col nume_subalt for a20 hea 'Nume subaltern'
+col salariu for 99,9990.99$ hea 'Salariu Subaltern'
+col d noprint new_value H
+
+ttitle center 'Structura Organizatorica' left 'Pagina' format 9 sql.pno right 'Data:' H skip 1 center '==========' skip 1
+btitle right 'DIRECTOR RESURSE UMANE'
+
+break on den_dep on nume_sef on report skip 1
+comp sum label 'Total/Dept' of Salariu_subalt on den_dep
+comp sum label 'Total General' of Salariu_subalt on report
+
+define venit = "(salariu + nvl(comision, 0))"
+define data = "to_char(sysdate, 'dd/mm/yyyy')"
+
+select
+    d.den_dep,
+    a2.nume AS "nume_sef",
+    a1.nume AS "Nume_subalt",
+    a1.salariu AS "Salariu_subalt",
+    &data d
+from
+    angajati a1
+    natural join departamente d
+    INNER JOIN angajati a2
+            ON a1.id_sef = a2.id_ang
+order by 1, 2, 3;
+
+clear col
+clear BREAK
+clear comp
+ttitle off
+btitle off
+set echo on
+set echo on
+set verify on
+set feedback on
 
 
 

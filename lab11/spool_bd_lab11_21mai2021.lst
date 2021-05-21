@@ -1,0 +1,420 @@
+SQL> set lines 200
+SQL> set pages 100
+SQL> select to_char(sysdate, 'dd-mm-yyyy hh:mi:ss') from dual;
+
+TO_CHAR(SYSDATE,'DD                                                                                                                                                                                     
+-------------------                                                                                                                                                                                     
+21-05-2021 09:29:20                                                                                                                                                                                     
+
+SQL> insert into login_lab_bd values( 'Filimon Adrian', '334CC', 'Lab11', user, sysdate, null, null);
+
+1 row created.
+
+SQL> select * from login_lab_bd;
+
+NUME_STUD                      GRUPA      LABORATOR  NUME_USER  DATA_IN   DATA_SF       DURATA                                                                                                          
+------------------------------ ---------- ---------- ---------- --------- --------- ----------                                                                                                          
+Filimon Adrian                 334CC      Lab11      SCOTT      21-MAY-21                                                                                                                               
+Filimon Adrian                 334CC      Lab9       SCOTT      07-MAY-21 07-MAY-21        303                                                                                                          
+Filimon Adrian                 334CC      Lab5       SCOTT      01-APR-21 01-APR-21        106                                                                                                          
+Filimon Adrian                 334CC      Lab7       SCOTT      16-APR-21 16-APR-21         73                                                                                                          
+Filimon Adrian                 334CC      Lab2       SCOTT      12-MAR-21 12-MAR-21        156                                                                                                          
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21 18-MAR-21        108                                                                                                          
+Filimon Adrian                 334CC      Lab3       SCOTT      18-MAR-21 18-MAR-21         37                                                                                                          
+Filimon Adrian                 334CC      Lab4       SCOTT      26-MAR-21 26-MAR-21        127                                                                                                          
+Filimon Adrian                 334CC      Lab6       SCOTT      09-APR-21 09-APR-21         72                                                                                                          
+Filimon Adrian                 334CC      Lab10      SCOTT      14-MAY-21 14-MAY-21        118                                                                                                          
+
+10 rows selected.
+
+SQL> set lines 120
+SQL> set pagesize 24
+SQL> set space 2
+SQL> set newpage 4
+SQL> set heading off
+SQL> set feedback off
+SQL> select * from emp;
+
+
+
+
+      7369  SMITH       CLERK            7902  17-DEC-80         800                      20                            
+      7499  ALLEN       SALESMAN         7698  20-FEB-81        1600         300          30                            
+      7521  WARD        SALESMAN         7698  22-FEB-81        1250         500          30                            
+      7566  JONES       MANAGER          7839  02-APR-81        2975                      20                            
+      7654  MARTIN      SALESMAN         7698  28-SEP-81        1250        1400          30                            
+      7698  BLAKE       MANAGER          7839  01-MAY-81        2850                      30                            
+      7782  CLARK       MANAGER          7839  09-JUN-81        2450                      10                            
+      7788  SCOTT       ANALYST          7566  19-APR-87        3000                      20                            
+      7839  KING        PRESIDENT              17-NOV-81        5000                      10                            
+      7844  TURNER      SALESMAN         7698  08-SEP-81        1500           0          30                            
+      7876  ADAMS       CLERK            7788  23-MAY-87        1100                      20                            
+      7900  JAMES       CLERK            7698  03-DEC-81         950                      30                            
+      7902  FORD        ANALYST          7566  03-DEC-81        3000                      20                            
+      7934  MILLER      CLERK            7782  23-JAN-82        1300                      10                            
+SQL> column id_depformat 099 heading 'Departament' justify center
+SP2-0158: unknown COLUMN option "099"
+SQL> column functie format A10 heading 'Job' justifyleft
+SP2-0735: unknown COLUMN option beginning "justifylef..."
+SQL> column id_ang format 9999 heading 'Ecuson' justify center
+SQL> column salarriu format 99,999
+SQL> column comision forrmat 99,9999.99 null 0
+SP2-0158: unknown COLUMN option "forrmat"
+SQL> column venit format 99,999.99 heading 'Venit Lunar'
+SQL> 
+SQL> select
+  2      id_dep, functie, id_ang, salariu,
+  3      comision, salariru + nvl(comision, 0) venit
+  4  from
+  5      angajati
+  6  where id_dep = 30;
+    comision, salariru + nvl(comision, 0) venit
+              *
+ERROR at line 3:
+ORA-00904: "SALARIRU": invalid identifier 
+
+
+SQL> column id_dep format 099 heading 'Departament' justify center
+SQL> column functie format A10 heading 'Job' justifyleft
+SP2-0735: unknown COLUMN option beginning "justifylef..."
+SQL> column id_ang format 9999 heading 'Ecuson' justify center
+SQL> column salariu format 99,999
+SQL> column comision format 99,9999.99 null 0
+SQL> column venit format 99,999.99 heading 'Venit Lunar'
+SQL> 
+SQL> select
+  2      id_dep, functie, id_ang, salariu,
+  3      comision, salariru + nvl(comision, 0) venit
+  4  from
+  5      angajati
+  6  where id_dep = 30;
+    comision, salariru + nvl(comision, 0) venit
+              *
+ERROR at line 3:
+ORA-00904: "SALARIRU": invalid identifier 
+
+
+SQL> column id_dep format 099 heading 'Departament' justify center
+SQL> column functie format A10 heading 'Job' justify left
+SQL> column id_ang format 9999 heading 'Ecuson' justify center
+SQL> column salariu format 99,999
+SQL> column comision format 99,9999.99 null 0
+SQL> column venit format 99,999.99 heading 'Venit Lunar'
+SQL> 
+SQL> select
+  2      id_dep, functie, id_ang, salariu,
+  3      comision, salariu + nvl(comision, 0) venit
+  4  from
+  5      angajati
+  6  where id_dep = 30;
+
+
+
+
+        030  SALESMAN      7499    1,600       300.00     1,900.00                                                      
+        030  SALESMAN      7521    1,250       500.00     1,750.00                                                      
+        030  SALESMAN      7654    1,250      1400.00     2,650.00                                                      
+        030  MANAGER       7698    2,850  0               2,850.00                                                      
+        030  SALESMAN      7844    1,500          .00     1,500.00                                                      
+        030  CLERK         7900      950  0                 950.00                                                      
+SQL> set lines 20
+SQL> set pagesize 20
+SQL> column A format 9999 heading 'Ecuson' justify center
+SQL> column B format A20 heading 'Nume Angajat'
+SQL> column C format A10 heading 'Job' justify left
+SQL> column D format A14 heading 'Data Angajare' justify center
+SQL> column E forrmat 99,999.00 heading 'Salariu'
+SP2-0158: unknown COLUMN option "forrmat"
+SQL> 
+SQL> TITLE left 'Pag: ' SQL.PNO center undeline 'Lista Angajati'
+SP2-0734: unknown command beginning "TITLE left..." - rest of line ignored.
+SQL> BTITLE right 'Director'
+SQL> 
+SQL> select
+  2      id_ang A,
+  3      nume B,
+  4      functie C,
+  5      data_ang D,
+  6      salariu e
+  7  from
+  8      angajati
+  9  where
+ 10      id_dep = 20;
+
+
+
+
+  7369              
+SMITH               
+CLERK               
+17-DEC-80           
+       800          
+                    
+  7566              
+JONES               
+MANAGER             
+02-APR-81           
+      2975          
+                    
+  7788              
+SCOTT               
+ANALYST             
+            Director
+
+
+
+
+19-APR-87           
+      3000          
+                    
+  7876              
+ADAMS               
+CLERK               
+23-MAY-87           
+      1100          
+                    
+  7902              
+FORD                
+ANALYST             
+03-DEC-81           
+      3000          
+                    
+            Director
+SQL> set pages 30
+SQL> column den_dep heading 'Departament'
+SQL> column nume formrat a25 heading 'Nume Angajat'
+SP2-0158: unknown COLUMN option "formrat"
+SQL> column functie format a15 heading 'Job' justify left
+SQL> column salariu format 99,999 heading 'Salariu'
+SQL> 
+SQL> ttitle left 'Pag: ' sql.pno center underline 'Lista Salarii'
+SQL> btitle right 'Director'
+SQL> 
+SQL> break on den_dep noduplicates on report
+SQL> compute sum of salariu on den_dep skip 1 report
+SQL> 
+SQL> select
+  2      d.den_dep, a.nume, a.functie, a.salariu
+  3  from
+  4      angajati a
+  5      INNER JOIN departamente d
+  6              ON a.id_dep = d.id_dep
+  7  order by a.id_dep;
+
+
+
+
+Pag:Lista Salarii   
+    _____________   
+                    
+ACCOUNTING          
+CLARK               
+MANAGER             
+  2,450             
+                    
+                    
+KING                
+PRESIDENT           
+  5,000             
+                    
+                    
+MILLER              
+CLERK               
+  1,300             
+                    
+********************
+                    
+                    
+-------             
+                    
+sum                 
+                    
+                    
+  8,750             
+            Director
+
+
+
+
+Pag:Lista Salarii   
+    _____________   
+                    
+                    
+RESEARCH            
+JONES               
+MANAGER             
+  2,975             
+                    
+                    
+FORD                
+ANALYST             
+  3,000             
+                    
+                    
+ADAMS               
+CLERK               
+  1,100             
+                    
+                    
+SMITH               
+CLERK               
+    800             
+                    
+                    
+SCOTT               
+ANALYST             
+            Director
+
+
+
+
+Pag:Lista Salarii   
+    _____________   
+                    
+  3,000             
+                    
+********************
+                    
+                    
+-------             
+                    
+sum                 
+                    
+                    
+ 10,875             
+                    
+SALES               
+WARD                
+SALESMAN            
+  1,250             
+                    
+                    
+TURNER              
+SALESMAN            
+  1,500             
+                    
+                    
+ALLEN               
+            Director
+
+
+
+
+Pag:Lista Salarii   
+    _____________   
+                    
+SALESMAN            
+  1,600             
+                    
+SALES               
+JAMES               
+CLERK               
+    950             
+                    
+                    
+BLAKE               
+MANAGER             
+  2,850             
+                    
+                    
+MARTIN              
+SALESMAN            
+  1,250             
+                    
+********************
+                    
+                    
+-------             
+                    
+sum                 
+            Director
+
+
+
+
+Pag:Lista Salarii   
+    _____________   
+                    
+                    
+                    
+  9,400             
+                    
+                    
+                    
+                    
+-------             
+                    
+sum                 
+                    
+                    
+ 29,025             
+                    
+
+
+
+
+
+
+
+
+
+
+            Director
+SQL> 
+SQL> ttitle off
+SQL> btitle off
+SQL> clear column
+columns cleared
+SQL> clear break
+breaks cleared
+SQL> clear compute
+computes cleared
+SQL> set pagesize 40
+SQL> set linesize 120
+SQL> set space 2
+SQL> set echo off
+SQL> set verify off
+SQL> set feedback off
+SQL> col den_dep for a15 hea 'Departament'
+SQL> col nume for a20 hea 'Nume'
+SQL> col functie for a15 hea 'Job'
+SQL> col v for 99,9990.99$ hea 'Venit'
+SQL> col i for 99,9990.99$ hea 'Departament'
+SQL> col d noprint new_value H
+SQL> col s for a10 hea 'Semnatura'
+SQL> 
+SQL> ttitle center 'Stat Salarii' skip 1 center '==========' skip 1 'Pagina' forrmat 09 sql.pno skip 1
+SQL> btitle left 'Data:' H right 'Director'
+SQL> 
+SQL> break on den_dep on report skip 1
+SQL> comp sum label 'Total/Dept' of v i on den_dep
+SQL> comp sum label 'Total' of v i on report
+SQL> 
+SQL> define venit = "(salariu + nvl(comision, 0))"
+SQL> define data = "to_char(sysdate, 'dd/mm/yyyy')"
+SQL> 
+SQL> select
+  2      d.den_dep, a.nume, a.functie, &venit v
+  3      decode(sign(2000 - &venit),
+  4          1,
+  5          0.1 * &venit
+  6          0.2 * &venit) i,
+  7      &data d, null s
+  8  from
+  9      angajati a
+ 10      natural join departamente d
+ 11  order by 1, 2;
+    decode(sign(2000 - (salariu + nvl(comision, 0))),
+    *
+ERROR at line 3:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> // WHY SPOOL???
+    decode(sign(2000 - (salariu + nvl(comision, 0))),
+    *
+ERROR at line 3:
+ORA-00923: FROM keyword not found where expected 
+
+
+SQL> spool d:\stat_plata.txt
